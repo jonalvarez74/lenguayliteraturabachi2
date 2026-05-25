@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Organizador Visual EAU - Carmen Laforet y la Literatura de Posguerra</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts de perfil académico, literario y editorial -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght=0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .serif-title {
+      font-family: 'Cinzel', serif;
+    }
+    .academic-serif {
+      font-family: 'Playfair Display', serif;
+    }
+    /* Estructura proporcional DINA4 Apaisado */
+    .a4-landscape-page {
+      width: 297mm;
+      height: 210mm;
+      max-width: 100%;
+      aspect-ratio: 297 / 210;
+    }
+    @media print {
+      body {
+        background: white;
+        color: black;
+        margin: 0;
+        padding: 0;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .print-fullscreen {
+        width: 297mm !important;
+        height: 210mm !important;
+        border: none !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 8mm !important;
+        page-break-inside: avoid;
+        background: white !important;
+      }
+      @page {
+        size: A4 landscape;
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-200 text-slate-900 transition-colors duration-300 min-h-screen py-6 px-4 flex flex-col items-center">
+
+  <!-- BARRA DE HERRAMIENTAS SUPERIOR (NO IMPRIMIBLE) -->
+  <div class="no-print w-full max-w-6xl mb-4 bg-white/80 backdrop-blur-md border border-slate-300 p-4 rounded-xl shadow-sm flex flex-wrap gap-4 items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="p-2 bg-slate-100 rounded-lg text-slate-800 border border-slate-200">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-lg font-bold text-slate-950 leading-tight">Organizador Visual EAU • Literatura</h1>
+        <p class="text-xs text-slate-500 font-medium">Carmen Laforet, "Nada" y la novela existencial en el marco del Decreto 76/2023 (EAU - CAPV)</p>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-3">
+      <!-- Selector de Claves de Examen -->
+      <div class="flex items-center gap-2">
+        <label for="categorySelector" class="text-xs font-semibold text-slate-600">Herramienta de Análisis:</label>
+        <select id="categorySelector" onchange="loadCategory()" class="px-3 py-1.5 border border-slate-300 rounded-lg text-xs font-medium focus:ring-2 focus:ring-slate-500 outline-none">
+          <option value="personajes">Análisis de Personajes Clave</option>
+          <option value="simbolos">Símbolos Nucleares de "Nada"</option>
+        </select>
+      </div>
+
+      <!-- Selector de Elementos Específicos -->
+      <div class="flex items-center gap-2">
+        <label id="elementLabel" for="elementSelector" class="text-xs font-semibold text-slate-600">Personaje:</label>
+        <select id="elementSelector" onchange="analyzeElement()" class="px-3 py-1.5 border border-slate-300 rounded-lg text-xs font-medium focus:ring-2 focus:ring-slate-500 outline-none">
+          <!-- Se rellena dinámicamente -->
+        </select>
+      </div>
+
+      <!-- Modo Ejercicio -->
+      <button id="toggleModeBtn" onclick="toggleEditMode()" class="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg font-medium text-sm hover:bg-slate-50 flex items-center gap-2 transition">
+        <span id="modeIcon">🔓</span>
+        <span id="modeText">Modo Ejercicio</span>
+      </button>
+
+      <!-- Botón Imprimir -->
+      <button onclick="window.print()" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg font-semibold text-sm flex items-center gap-2 transition shadow-sm border border-slate-950">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+        </svg>
+        Descargar en PDF / Imprimir
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTENEDOR DINA4 APAISADO -->
+  <div id="canvas" class="print-fullscreen a4-landscape-page bg-white text-slate-800 shadow-2xl rounded-2xl border border-slate-300 overflow-hidden flex flex-col p-8 transition-transform duration-300 relative justify-between">
+    
+    <!-- ENCABEZADO DE LA HOJA -->
+    <header class="border-b-2 border-slate-950/10 pb-3 mb-3 flex justify-between items-end">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-widest text-slate-800 bg-slate-100 px-2 py-1 rounded border border-slate-200">EAU • Educación Literaria (Carmen Laforet)</span>
+        <h2 class="serif-title text-2xl font-bold text-slate-900 mt-1">Carmen Laforet y la Novela de Posguerra</h2>
+      </div>
+      <div class="text-right">
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Metodología de Comentario</p>
+        <p class="academic-serif italic text-sm text-slate-700">Existencialismo, Tono Lírico y Clautrofobia de la Calle Aribau</p>
+      </div>
+    </header>
+
+    <!-- CUADRÍCULA DE COLUMNAS (3 Bloques de Contenido) -->
+    <main class="grid grid-cols-3 gap-5 flex-grow content-start">
+      
+      <!-- COLUMNA 1: CONTEXTO DE POSGUERRA (AÑOS 40) -->
+      <section class="flex flex-col gap-3 border-r border-dashed border-slate-200 pr-3">
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 hover:border-slate-300 transition">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-5 h-5 flex items-center justify-center bg-slate-800 text-white rounded-full text-[10px] font-bold">1</span>
+            <h3 class="text-xs font-bold uppercase text-slate-950 tracking-wider">La Novela de los Años 40</h3>
+          </div>
+          <p class="text-[10px] text-slate-500 mb-1.5 leading-tight">La Guerra Civil provocó una ruptura radical. La narrativa interior se debatió entre la censura y la penuria material:</p>
+          
+          <div class="space-y-1.5 text-xs">
+            <div class="p-1.5 bg-white rounded border border-slate-150">
+              <span class="font-bold text-slate-900 block">Novela Ideológica / Triunfalista:</span>
+              <p class="text-[10px] text-slate-600 leading-tight">Exaltación militar y de los valores tradicionales de los vencedores del régimen.</p>
+            </div>
+            
+            <div class="p-1.5 bg-white rounded border border-slate-150">
+              <span class="font-bold text-slate-900 block">Novela de Evasión:</span>
+              <p class="text-[10px] text-slate-600 leading-tight">Historias sentimentales o de humor burgués para eludir la dura realidad gris de la posguerra.</p>
+            </div>
+
+            <div class="p-1.5 bg-white rounded border border-slate-150">
+              <span class="font-bold text-slate-900 block">Existencialismo y Tremendismo:</span>
+              <p class="text-[10px] text-slate-600 leading-tight">Reflejo amargo, sórdido e hiperrealista del desamparo y la soledad. <em>Nada</em> (1944) es la obra cumbre de la vertiente existencialista.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLUMNA 2: CARMEN LAFORET (TRAYECTORIA Y ESTILO) -->
+      <section class="flex flex-col gap-3 border-r border-dashed border-slate-200 px-1">
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 hover:border-slate-300 transition flex-grow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-5 h-5 flex items-center justify-center bg-slate-800 text-white rounded-full text-[10px] font-bold">2</span>
+              <h3 class="text-xs font-bold uppercase text-slate-950 tracking-wider">Laforet: Trayectoria y Técnica</h3>
+            </div>
+            <p class="text-[10px] text-slate-500 mb-1.5 leading-tight">Aspectos biográficos y estilísticos clave exigidos en la corrección de la EAU:</p>
+            
+            <div class="space-y-1.5 text-xs">
+              <!-- Hito Nadal -->
+              <div class="bg-white p-2 rounded border border-stone-150">
+                <span class="font-bold text-slate-900 block">El Premio Nadal de 1944:</span>
+                <p class="text-[10px] text-slate-600 leading-tight">A los 23 años, una joven desconocida obtiene el primer Nadal. Supuso un revulsivo literario e introdujo la perspectiva femenina e íntima en la narrativa.</p>
+              </div>
+
+              <!-- Narradora Testigo -->
+              <div class="bg-white p-2 rounded border border-stone-150">
+                <span class="font-bold text-slate-900 block">Narradora-Testigo:</span>
+                <p class="text-[10px] text-slate-600 leading-tight">Andrea no es un héroe activo, sino una observadora pasiva y sensible. Su mirada capta el absurdo y la desolación de su entorno.</p>
+              </div>
+
+              <!-- Rasgos Estilísticos -->
+              <div class="bg-white p-2 rounded border border-stone-150">
+                <span class="font-bold text-slate-900 block">Estilo Lírico e Impresionista:</span>
+                <p class="text-[10px] text-slate-600 leading-tight">Uso constante de sensaciones táctiles, olores y juegos de luces y sombras para modelar la sordidez familiar de la casa y del alma.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLUMNA 3: "NADA" (ESTRUCTURA, ESPACIO Y TEMAS) -->
+      <section class="flex flex-col gap-3 pl-3">
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 hover:border-slate-300 transition flex-grow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-5 h-5 flex items-center justify-center bg-slate-800 text-white rounded-full text-[10px] font-bold">3</span>
+              <h3 class="text-xs font-bold uppercase text-slate-950 tracking-wider">"Nada": Moldes y Temática</h3>
+            </div>
+            <p class="text-[10px] text-slate-500 mb-1.5 leading-tight">El andamiaje estructural y el choque de espacios de la novela:</p>
+            
+            <div class="space-y-1.5 text-xs">
+              <!-- Estructura Tripartita -->
+              <div class="bg-white p-1.5 rounded border border-stone-150">
+                <span class="font-bold text-slate-900 block">Estructura Tripartita:</span>
+                <p class="text-[10px] text-slate-600 leading-tight"><strong>1ª parte (I-IX):</strong> Choque con la calle Aribau. <br><strong>2ª parte (X-XVIII):</strong> Amistad exterior con Ena. <br><strong>3ª parte (XIX-XXV):</strong> Resolución familiar y salida a Madrid.</p>
+              </div>
+
+              <!-- Estructura Circular -->
+              <div class="bg-white p-1.5 rounded border border-stone-150">
+                <span class="font-bold text-slate-900 block">Estructura Circular / Desencanto:</span>
+                <p class="text-[10px] text-slate-600 leading-tight">Se abre y se cierra con Andrea sola, rememorando su ilusión del tren frente a la sensación de no llevarse "nada" material de la casa.</p>
+              </div>
+
+              <!-- Espacio Binarizado -->
+              <div class="bg-white p-1.5 rounded border border-stone-150">
+                <span class="font-bold text-slate-900 block">Binarización Espacial:</span>
+                <p class="text-[10px] text-slate-600 leading-tight">La **calle Aribau** (infierno cerrado, sórdido, violento e histriónico) frente a la **Barcelona exterior** (luz de la Universidad y la burguesía de Ena).</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ÁREA COMPLEMENTARIA: WIDGET INTERACTIVO DE EXAMEN (PREMIUM WIDGET) -->
+    <div id="dynamicAnalyzer" class="bg-slate-100 border border-slate-300 p-3 rounded-xl">
+      <div class="flex justify-between items-center mb-1.5">
+        <h4 class="text-xs font-bold text-slate-950 uppercase tracking-wider flex items-center gap-1.5">
+          <span id="widgetIcon">👤</span> <span id="widgetTitle">Análisis de Personajes Clave (Ficha EAU)</span>
+        </h4>
+        <span id="analyzerWordType" class="text-[10px] font-bold text-slate-800 bg-white px-2 py-0.5 rounded border border-slate-300">
+          Esperando selección...
+        </span>
+      </div>
+      
+      <!-- Bloques de análisis crítico visual -->
+      <div id="segmentsWrapper" class="grid grid-cols-4 gap-2 min-h-[52px] bg-white border border-slate-200 rounded-lg p-2 text-center items-stretch">
+        <span class="text-xs text-slate-400 italic col-span-4 self-center">Selecciona un elemento en la barra de herramientas superior para desplegar su análisis crítico e interpretativo según los requerimientos de la EAU del País Vasco.</span>
+      </div>
+    </div>
+
+    <!-- PIE DE HOJA: CRITERIO DE EVALUACIÓN INEXCUSABLE -->
+    <footer class="mt-2 bg-slate-950 text-white p-3 rounded-xl flex items-center justify-between shadow-inner">
+      <div class="flex items-center gap-3">
+        <span class="text-xl">⚡</span>
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300">Criterio Inexcusable de Corrección de la EAU (UPV/EHU)</h4>
+          <p class="text-[10px] text-slate-300 leading-tight">Para la calificación máxima en el tema de Carmen Laforet, el examen debe vincular el **desamparo existencial** de Andrea con la **sordidez claustrofóbica de la casa de la calle Aribau**.</p>
+        </div>
+      </div>
+      <div class="text-[9px] font-bold text-slate-300 bg-slate-900 px-2.5 py-1.5 rounded-lg border border-slate-800 shrink-0">
+        ARIBAU + EXISTENCIALISMO + ANÁLISIS
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- SECCIÓN DE NOTAS Y HERRAMIENTAS ADICIONALES (NO IMPRIMIBLE) -->
+  <div class="no-print w-full max-w-6xl mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Guía de Redacción para Examen -->
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+      <h3 class="text-sm font-bold uppercase text-slate-900 mb-3 tracking-wide flex items-center gap-2">
+        <span>📝</span> Plantilla de Redacción Crítica EAU (Laforet)
+      </h3>
+      <div class="p-3 bg-slate-50 rounded-lg text-xs font-mono text-slate-700 leading-relaxed space-y-1" contenteditable="true">
+        En el fragmento propuesto de <strong>Nada</strong> de Carmen Laforet, se percibe de forma inconfundible la atmósfera del <strong>[existencialismo / sordidez]</strong> característico de la posguerra. La mirada subjetiva de Andrea, como <strong>[narradora-testigo]</strong>, proyecta su angustia íntima sobre el espacio opresivo de <strong>[la calle Aribau]</strong>, recurriendo para ello a recursos impresionistas y símbolos nucleares como <strong>[mencionar símbolo: el hambre, el polvo, la suciedad, la ducha]</strong>, que representan <strong>[explicar la carga y significado del símbolo elegido]</strong> en la novela.
+      </div>
+    </div>
+
+    <!-- Criterios de Evaluación y Checklist -->
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+      <h3 class="text-sm font-bold uppercase text-slate-900 mb-3 tracking-wide flex items-center gap-2">
+        <span>🎯</span> Checklist del Examen de Literatura (Laforet y "Nada")
+      </h3>
+      <ul class="text-xs text-slate-600 space-y-2">
+        <li class="flex items-start gap-2">
+          <input type="checkbox" class="mt-0.5 rounded text-slate-800 focus:ring-slate-500">
+          <span>¿He argumentado adecuadamente el valor revolucionario del primer Premio Nadal de 1944 en el contexto de posguerra?</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <input type="checkbox" class="mt-0.5 rounded text-slate-800 focus:ring-slate-500">
+          <span>¿He contrastado el infierno familiar e histriónico de la calle Aribau frente al oasis de libertad y juventud de la universidad?</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <input type="checkbox" class="mt-0.5 rounded text-slate-800 focus:ring-slate-500">
+          <span>¿He explicado el final de la novela como una estructura circular de desencanto donde Andrea se marcha "sin nada"?</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    let isEditMode = false;
+    const initialContent = {};
+
+    window.onload = function() {
+      const editables = document.querySelectorAll('[contenteditable="true"]');
+      editables.forEach((el, index) => {
+        initialContent[index] = el.innerHTML;
+      });
+      // Inicializar el selector de elementos al cargar
+      loadCategory();
+    };
+
+    // Base de datos de claves didácticas de "Nada" para el widget interactivo
+    const analyticalData = {
+      personajes: {
+        andrea: {
+          title: "Andrea - Protagonista y Mirada Pasiva",
+          segments: [
+            { value: "Narradora-testigo sensible", label: "Rol Narrativo", bg: "bg-slate-100 text-slate-950 border-slate-300" },
+            { value: "Anhelo de libertad e independencia", label: "Motivación", bg: "bg-slate-100 text-slate-950 border-slate-300" },
+            { value: "Búsqueda del conocimiento frente a la sumisión de la mujer", label: "Dimensión Social", bg: "bg-slate-100 text-slate-950 border-slate-300" },
+            { value: "Evolución existencial: madurez construida sobre el desencanto", label: "Trascendencia", bg: "bg-amber-50 text-amber-950 border-amber-300" }
+          ]
+        },
+        roman: {
+          title: "Román - Tío Seductor y Demoníaco",
+          segments: [
+            { value: "Catalizador de la violencia y locura familiar", label: "Rol Dramático", bg: "bg-slate-100 text-slate-950 border-slate-300" },
+            { value: "Artista manipulador de los sentimientos ajenos", label: "Personalidad", bg: "bg-slate-100 text-slate-950 border-slate-300" },
+            { value: "Su buhardilla representa el refugio estético y el peligro", label: "Espacio", bg: "bg-slate-100 text-slate-950 border-slate-300" },
+            { value: "Su suicidio precipita la resolución de la tensión en la casa", label: "Trascendencia", bg: "bg-rose-50 text-rose-950 border-rose-300" }
+          ]
+        },
+        ena: {
+          title: "Ena - Luz, Modernidad y Exterior",
+          segments: [
+            { value: "Oasis de juventud, cultura y burguesía de Barcelona", label: "Asociación", bg: "bg-slate-100 text-slate-950 border-slate-300" },
+            { value: "Amiga fiel y protectora de Andrea frente a Aribau", label: "Función", bg: "bg-slate-100 text-slate-950 border-slate-300" },
+            { value: "Mantiene una misteriosa atracción/venganza con Román", label: "Conflicto", bg: "bg-slate-100 text-slate-950 border-slate-300" },
+            { value: "Le brinda a Andrea la salida física definitiva a Madrid", label: "Trascendencia", bg: "bg-emerald-50 text-emerald-950 border-emerald-300" }
+          ]
+        },
+        angustias: {
+          title: "Tía Angustias - Represión y Rigidez Moral",
+          segments: [
+            { value: "Encarna la hipocresía nacionalcatólica de posguerra", label: "Significado", bg: "bg-slate-100 text-slate-950 border-slate-300" },
+            { value: "Opresión patriarcal sobre la libertad de Andrea", label: "Acción", bg: "bg-slate-100 text-slate-950 border-slate-300" },
+            { value: "Solo concibe dos destinos para la mujer: el matrimonio o el convento", label: "Mentalidad", bg: "bg-slate-100 text-slate-950 border-slate-300" },
+            { value: "Su ingreso final en el convento libera a Andrea de la tiranía directa", label: "Desenlace", bg: "bg-orange-50 text-orange-950 border-orange-300" }
+          ]
+        },
+        abuela: {
+          title: "La Abuela - Bondad Débil e Inoperante",
+          segments: [
+            { value: "Único personaje que profesa amor incondicional", label: "Personalidad", bg: "bg-slate-100 text-slate-950 border-slate-300" },
+            { value: "Justifica y perdona siempre la violencia de sus hijos", label: "Debilidad", bg: "bg-slate-100 text-slate-950 border-slate-300" },
+            { value: "Víctima indefensa de la decadencia económica y moral familiar", label: "Estatus", bg: "bg-slate-100 text-slate-950 border-slate-300" },
+            { value: "Símbolo de la herencia rota de la España previa a la tragedia", label: "Trascendencia", bg: "bg-blue-50 text-blue-950 border-blue-300" }
+          ]
+        }
+      },
+      simbolos: {
+        aribau: {
+          title: "Calle Aribau - Espacio Claustrofóbico de Posguerra",
+          segments: [
+            { value: "Retrato social de la miseria y violencia familiar", label: "Significado", bg: "bg-slate-100 text-slate-950 border-slate-300" },
+            { value: "Purgatorio cerrado del que resulta difícil escapar", label: "Carga Psicológica", bg: "bg-slate-100 text-slate-950 border-slate-300" },
+            { value: "Luz escasa, olores nauseabundos, acumulación de trastos", label: "Atributos", bg: "bg-slate-100 text-slate-950 border-slate-300" },
+            { value: "Microcosmos asfixiante de la España gris bajo la dictadura", label: "Trascendencia", bg: "bg-amber-50 text-amber-950 border-amber-300" }
+          ]
+        },
+        hambre: {
+          title: "El Hambre - Privación Física y Vacío Existencial",
+          segments: [
+            { value: "Hambre real de posguerra que debilita el cuerpo de Andrea", label: "Plano Real", bg: "bg-slate-100 text-slate-950 border-slate-300" },
+            { value: "Hambre existencial: vacío de afectos, juventud y futuro", label: "Plano Simbólico", bg: "bg-slate-100 text-slate-950 border-slate-300" },
+            { value: "Se contrapone a los banquetes burgueses en casa de Ena", label: "Contraste", bg: "bg-slate-100 text-slate-950 border-slate-300" },
+            { value: "Metáfora del dolor inefable del superviviente en los años 40", label: "Trascendencia", bg: "bg-purple-50 text-purple-950 border-purple-300" }
+          ]
+        },
+        polvo: {
+          title: "Polvo y Suciedad - Decadencia y Mentiras",
+          segments: [
+            { value: "Los trastos polvorientos acumulados en la casa", label: "Plano Real", bg: "bg-slate-100 text-slate-950 border-slate-300" },
+            { value: "Decadencia económica y moral de la otrora burguesía", label: "Plano Simbólico", bg: "bg-slate-100 text-slate-950 border-slate-300" },
+            { value: "La acumulación del tiempo sin barrer = olvido e indiferencia", label: "Asociación", bg: "bg-slate-100 text-slate-950 border-slate-300" },
+            { value: "La suciedad física refleja la podredumbre del alma familiar", label: "Trascendencia", bg: "bg-amber-50 text-amber-950 border-amber-300" }
+          ]
+        },
+        agua: {
+          title: "Ducha / Agua - Intento de Purificación",
+          segments: [
+            { value: "La ducha gélida de la casa en el cuarto de baño común", label: "Plano Real", bg: "bg-slate-100 text-slate-950 border-slate-300" },
+            { value: "Anhelo de Andrea de lavar la suciedad de la calle Aribau", label: "Plano Simbólico", bg: "bg-slate-100 text-slate-950 border-slate-300" },
+            { value: "Representa el bautismo higiénico contra la locura familiar", label: "Asociación", bg: "bg-slate-100 text-slate-950 border-slate-300" },
+            { value: "Necesidad de renacimiento físico e intelectual constante", label: "Trascendencia", bg: "bg-blue-50 text-blue-950 border-blue-300" }
+          ]
+        }
+      }
+    };
+
+    function loadCategory() {
+      const catSelector = document.getElementById('categorySelector');
+      const eleSelector = document.getElementById('elementSelector');
+      const eleLabel = document.getElementById('elementLabel');
+      const widgetTitle = document.getElementById('widgetTitle');
+      const widgetIcon = document.getElementById('widgetIcon');
+      
+      const cat = catSelector.value;
+      eleSelector.innerHTML = "";
+
+      if (cat === 'personajes') {
+        widgetTitle.innerText = "Análisis de Personajes Clave (Ficha EAU)";
+        widgetIcon.innerText = "👤";
+        eleLabel.innerText = "Personaje:";
+        
+        const options = [
+          { value: "andrea", text: "Andrea" },
+          { value: "roman", text: "Román" },
+          { value: "ena", text: "Ena" },
+          { value: "angustias", text: "Tía Angustias" },
+          { value: "abuela", text: "La Abuela" }
+        ];
+        options.forEach(opt => {
+          const el = document.createElement('option');
+          el.value = opt.value;
+          el.text = opt.text;
+          eleSelector.appendChild(el);
+        });
+      } else if (cat === 'simbolos') {
+        widgetTitle.innerText = "Análisis de Símbolos Existenciales (Ficha EAU)";
+        widgetIcon.innerText = "🔑";
+        eleLabel.innerText = "Símbolo:";
+        
+        const options = [
+          { value: "aribau", text: "La calle Aribau" },
+          { value: "hambre", text: "El hambre" },
+          { value: "polvo", text: "El polvo y la suciedad" },
+          { value: "agua", text: "El agua / la ducha" }
+        ];
+        options.forEach(opt => {
+          const el = document.createElement('option');
+          el.value = opt.value;
+          el.text = opt.text;
+          eleSelector.appendChild(el);
+        });
+      }
+      analyzeElement();
+    }
+
+    function analyzeElement() {
+      const catSelector = document.getElementById('categorySelector').value;
+      const eleSelector = document.getElementById('elementSelector').value;
+      const typeContainer = document.getElementById('analyzerWordType');
+      const wrapper = document.getElementById('segmentsWrapper');
+
+      if (!eleSelector || !analyticalData[catSelector] || !analyticalData[catSelector][eleSelector]) {
+        typeContainer.innerText = "Esperando selección...";
+        wrapper.innerHTML = `<span class="text-xs text-slate-400 italic col-span-4 self-center">Selecciona un elemento en la barra de herramientas superior para desplegar su análisis crítico e interpretativo según los requerimientos de la EAU del País Vasco.</span>`;
+        return;
+      }
+
+      const data = analyticalData[catSelector][eleSelector];
+      typeContainer.innerText = data.title;
+      wrapper.innerHTML = "";
+
+      data.segments.forEach(seg => {
+        const item = document.createElement('div');
+        item.className = `flex flex-col items-center justify-center p-2 rounded-lg border ${seg.bg} shadow-sm transition-transform hover:scale-[1.02]`;
+        item.innerHTML = `
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1 leading-none">${seg.label}</span>
+          <span class="text-xs font-semibold leading-snug">${seg.value}</span>
+        `;
+        wrapper.appendChild(item);
+      });
+    }
+
+    function toggleEditMode() {
+      isEditMode = !isEditMode;
+      const editableBoxes = document.querySelectorAll('[contenteditable="true"]');
+      const textBtn = document.getElementById('modeText');
+      const iconBtn = document.getElementById('modeIcon');
+      
+      if (isEditMode) {
+        textBtn.innerText = "Modo Informativo / Reiniciar";
+        iconBtn.innerText = "🔒";
+        
+        editableBoxes.forEach(el => {
+          el.classList.add('bg-amber-50', 'border-amber-300');
+          el.innerText = "[EJERCICIO DE COMENTARIO: Redacta aquí tu análisis existencial y estilístico del fragmento seleccionado de 'Nada'. Identifica los rasgos de la perspectiva de Andrea, justifica el contraste espacial de la calle Aribau con el exterior, define el rol que juegan los personajes de la escena y comenta el significado dramático y poético de la simbología implícita]";
+        });
+      } else {
+        textBtn.innerText = "Modo Ejercicio";
+        iconBtn.innerText = "🔓";
+        
+        editableBoxes.forEach((el, index) => {
+          el.classList.remove('bg-amber-50', 'border-amber-300');
+          el.innerHTML = initialContent[index];
+        });
+      }
+    }
+  </script>
+</body>
+</html>

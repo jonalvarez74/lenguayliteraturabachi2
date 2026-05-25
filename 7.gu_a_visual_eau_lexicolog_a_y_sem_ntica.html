@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Organizador Visual EAU - Lexicología y Semántica</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts de perfil académico, científico y editorial -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght=0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .serif-title {
+      font-family: 'Cinzel', serif;
+    }
+    .academic-serif {
+      font-family: 'Playfair Display', serif;
+    }
+    /* Estructura proporcional DINA4 Apaisado */
+    .a4-landscape-page {
+      width: 297mm;
+      height: 210mm;
+      max-width: 100%;
+      aspect-ratio: 297 / 210;
+    }
+    @media print {
+      body {
+        background: white;
+        color: black;
+        margin: 0;
+        padding: 0;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .print-fullscreen {
+        width: 297mm !important;
+        height: 210mm !important;
+        border: none !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 8mm !important;
+        page-break-inside: avoid;
+        background: white !important;
+      }
+      @page {
+        size: A4 landscape;
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-900 transition-colors duration-300 min-h-screen py-6 px-4 flex flex-col items-center">
+
+  <!-- BARRA DE HERRAMIENTAS SUPERIOR (NO IMPRIMIBLE) -->
+  <div class="no-print w-full max-w-6xl mb-4 bg-white/80 backdrop-blur-md border border-slate-200 p-4 rounded-xl shadow-sm flex flex-wrap gap-4 items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="p-2 bg-indigo-50 rounded-lg text-indigo-700 border border-indigo-100">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-lg font-bold text-slate-950 leading-tight">Organizador Visual EAU • Semántica</h1>
+        <p class="text-xs text-slate-500 font-medium">Relaciones de significado, procedencia y caudal léxico según la RAE y el GTG (Decreto 76/2023)</p>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-3">
+      <!-- Selector de Casos Semánticos de Examen -->
+      <div class="flex items-center gap-2">
+        <label for="semanticSelector" class="text-xs font-semibold text-slate-600">Casos de Examen:</label>
+        <select id="semanticSelector" onchange="analyzeSemanticCase()" class="px-3 py-1.5 border border-slate-300 rounded-lg text-xs font-medium focus:ring-2 focus:ring-indigo-600 outline-none">
+          <option value="default">Seleccionar caso práctico EAU...</option>
+          <option value="correferencia">Sinonimia por Correferencia</option>
+          <option value="doblete">Doblete Histórico (Patrimonial vs Cultismo)</option>
+          <option value="isotopia">Isotopía / Campo Asociativo</option>
+          <option value="metonimia">Metonimia de Examen</option>
+          <option value="antonimia">Antonimia Gradual y Recíproca</option>
+        </select>
+      </div>
+
+      <!-- Modo Ejercicio -->
+      <button id="toggleModeBtn" onclick="toggleEditMode()" class="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg font-medium text-sm hover:bg-slate-50 flex items-center gap-2 transition">
+        <span id="modeIcon">🔓</span>
+        <span id="modeText">Modo Ejercicio</span>
+      </button>
+
+      <!-- Botón Imprimir -->
+      <button onclick="window.print()" class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 text-white rounded-lg font-semibold text-sm flex items-center gap-2 transition shadow-sm border border-indigo-900">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+        </svg>
+        Descargar en PDF / Imprimir
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTENEDOR DINA4 APAISADO -->
+  <div id="canvas" class="print-fullscreen a4-landscape-page bg-white text-slate-800 shadow-2xl rounded-2xl border border-slate-300 overflow-hidden flex flex-col p-8 transition-transform duration-300 relative justify-between">
+    
+    <!-- ENCABEZADO DE LA HOJA -->
+    <header class="border-b-2 border-indigo-950/10 pb-3 mb-3 flex justify-between items-end">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-widest text-indigo-800 bg-indigo-50 px-2 py-1 rounded border border-indigo-100">EAU • Conocimiento de la Lengua (Léxico y Semántica)</span>
+        <h2 class="serif-title text-2xl font-bold text-slate-900 mt-1">Lexicología y Semántica Textual</h2>
+      </div>
+      <div class="text-right">
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Metodología de Comentario</p>
+        <p class="academic-serif italic text-sm text-indigo-900">Relaciones de Significado, Caudal Léxico y Pruebas EAU</p>
+      </div>
+    </header>
+
+    <!-- CUADRÍCULA DE COLUMNAS (3 Bloques de Contenido) -->
+    <main class="grid grid-cols-3 gap-5 flex-grow content-start">
+      
+      <!-- COLUMNA 1: FUNDAMENTOS Y RELACIONES SEMÁNTICAS -->
+      <section class="flex flex-col gap-3 border-r border-dashed border-slate-200 pr-3">
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 hover:border-indigo-200 transition">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-5 h-5 flex items-center justify-center bg-indigo-750 text-white rounded-full text-[10px] font-bold">1</span>
+            <h3 class="text-xs font-bold uppercase text-slate-950 tracking-wider">Estructura del Significado</h3>
+          </div>
+          <p class="text-[10px] text-slate-500 mb-1.5 leading-tight font-medium">Análisis denotativo y relaciones formales de equivalencia o contraste:</p>
+          
+          <div class="space-y-1.5 text-xs">
+            <div class="p-1.5 bg-white rounded border border-slate-150">
+              <span class="font-bold text-indigo-950 block">Denotación vs Connotación:</span>
+              <p class="text-[10px] text-slate-600 leading-tight">La **denotación** es el significado objetivo/diccionario. La **connotación** añade valores subjetivos y culturales contextuales.</p>
+            </div>
+            
+            <div class="p-1.5 bg-white rounded border border-slate-150">
+              <span class="font-bold text-indigo-950 block">Tipología de Sinonimia (GTG):</span>
+              <ul class="text-[9px] text-slate-600 space-y-0.5 pl-1">
+                <li>• <strong>Conceptual (Total):</strong> Plena equivalencia (ej. *dentista / odontólogo*).</li>
+                <li>• <strong>Contextual (Parcial):</strong> Solo en ciertos enunciados (ej. *pesado / indigesto*).</li>
+                <li>• <strong>Correferencia:</strong> Alusión al mismo referente real sin sinónimos directos (ej. *Cervantes / el autor de El Quijote*).</li>
+              </ul>
+            </div>
+
+            <div class="p-1.5 bg-white rounded border border-slate-150">
+              <span class="font-bold text-indigo-950 block">Antonimia y Polisemia:</span>
+              <p class="text-[10px] text-slate-600 leading-tight">Oposición de rasgos: <strong>Complementarios</strong> (vivo/muerto), <strong>Graduales</strong> (frío/caliente) y <strong>Recíprocos</strong> (dar/recibir). Polisemia (un significante, varios significados con raíz común).</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLUMNA 2: REDES LÉXICAS Y SUBJETIVIDAD (MODALIZACIÓN) -->
+      <section class="flex flex-col gap-3 border-r border-dashed border-slate-200 px-1">
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 hover:border-indigo-200 transition flex-grow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-5 h-5 flex items-center justify-center bg-indigo-750 text-white rounded-full text-[10px] font-bold">2</span>
+              <h3 class="text-xs font-bold uppercase text-slate-950 tracking-wider">Redes y Expresividad</h3>
+            </div>
+            <p class="text-[10px] text-slate-500 mb-1.5 leading-tight font-medium">Asociación de términos y marcas de presencia del autor:</p>
+            
+            <div class="space-y-1.5 text-xs">
+              <!-- Campo Semántico vs Asociativo -->
+              <div class="bg-white p-2 rounded border border-stone-150">
+                <span class="font-bold text-indigo-950 block">Campos y Agrupaciones:</span>
+                <p class="text-[10px] text-slate-600 leading-tight"><strong>Campo Semántico:</strong> Palabras de la misma categoría gramatical con sema común (asientos). <br><strong>Campo Asociativo / Isotopía:</strong> Términos de cualquier categoría vinculados a un mismo tema (ej. deporte: *correr, balón, estadio*).</p>
+              </div>
+
+              <!-- Léxico Valorativo -->
+              <div class="bg-white p-2 rounded border border-stone-150">
+                <span class="font-bold text-indigo-950 block">Léxico Valorativo (Modalización):</span>
+                <p class="text-[10px] text-slate-600 leading-tight">Adjetivos calificativos afectivos, sustantivos de juicio o verbos de actitud mental para manifestar la subjetividad en textos de opinión.</p>
+              </div>
+
+              <!-- Tropos e indirectas -->
+              <div class="bg-white p-2 rounded border border-stone-150">
+                <span class="font-bold text-indigo-950 block">Figuras Semánticas y Tabú:</span>
+                <p class="text-[10px] text-slate-600 leading-tight">Uso de la **metáfora**, la **metonimia** (causa-efecto, continente-contenido) y el binomio **Tabú / Eufemismo** para atenuar o matizar juicios.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLUMNA 3: PROCEDENCIA Y CAUDAL LÉXICO -->
+      <section class="flex flex-col gap-3 pl-3">
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 hover:border-indigo-200 transition flex-grow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-5 h-5 flex items-center justify-center bg-indigo-750 text-white rounded-full text-[10px] font-bold">3</span>
+              <h3 class="text-xs font-bold uppercase text-slate-950 tracking-wider font-semibold">Caudal e Historia</h3>
+            </div>
+            <p class="text-[10px] text-slate-500 mb-1.5 leading-tight font-medium">Análisis del origen histórico y el tono de los vocablos:</p>
+            
+            <div class="space-y-1.5 text-xs">
+              <!-- Configuración Histórica -->
+              <div class="bg-white p-2 rounded border border-stone-150">
+                <span class="font-bold text-indigo-950 block">Evolución Histórica:</span>
+                <p class="text-[10px] text-slate-600 leading-tight"><strong>Voces Patrimoniales:</strong> Cambios fonéticos completos desde el latín. <br><strong>Cultismos:</strong> Incorporación tardía sin variaciones fonéticas significativas. <br><strong>Dobletes:</strong> Misma raíz latina con ambas vías (ej. *colocar / colgar*).</p>
+              </div>
+
+              <!-- Préstamos -->
+              <div class="bg-white p-2 rounded border border-stone-150">
+                <span class="font-bold text-indigo-950 block">Préstamos Lingüísticos:</span>
+                <p class="text-[10px] text-slate-600 leading-tight">Diferenciar entre <strong>Xenismos/Préstamos Crudos</strong> (sin adaptar: *software, backstage*) y <strong>Préstamos Adaptados</strong> fonéticamente al español (*fútbol, espagueti*).</p>
+              </div>
+
+              <!-- Tecnicismos -->
+              <div class="bg-white p-2 rounded border border-stone-150">
+                <span class="font-bold text-indigo-950 block">Tecnicismos Científicos:</span>
+                <p class="text-[10px] text-slate-600 leading-tight">Voces de precisión unívoca de una materia del saber que aportan rigor, objetividad y universalidad al discurso expositivo.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ÁREA COMPLEMENTARIA: DESCODIFICADOR LÉXICO-SEMÁNTICO INTERACTIVO (PREMIUM WIDGET) -->
+    <div id="dynamicAnalyzer" class="bg-indigo-50/50 border border-indigo-150 p-3 rounded-xl">
+      <div class="flex justify-between items-center mb-1.5">
+        <h4 class="text-xs font-bold text-indigo-950 uppercase tracking-wider flex items-center gap-1.5">
+          <span>🔬</span> Descodificador Léxico-Semántico Activo (EAU UPV/EHU)
+        </h4>
+        <span id="analyzerWordType" class="text-[10px] font-bold text-indigo-900 bg-white px-2 py-0.5 rounded border border-indigo-200">
+          Esperando selección...
+        </span>
+      </div>
+      
+      <!-- Bloques de análisis crítico visual -->
+      <div id="segmentsWrapper" class="grid grid-cols-4 gap-2 min-h-[52px] bg-white border border-stone-200 rounded-lg p-2 text-center items-stretch">
+        <span class="text-xs text-indigo-400 italic col-span-4 self-center">Selecciona un caso práctico en la barra de herramientas superior para desplegar su ficha de análisis crítico y justificación oficial según el corrector de la EAU del País Vasco.</span>
+      </div>
+    </div>
+
+    <!-- PIE DE HOJA: CRITERIO DE EVALUACIÓN INEXCUSABLE -->
+    <footer class="mt-3 bg-indigo-950 text-white p-3 rounded-xl flex items-center justify-between shadow-inner">
+      <div class="flex items-center gap-3">
+        <span class="text-xl">⚡</span>
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-indigo-300">Criterio de Evaluación Obligatorio de la EAU (UPV/EHU)</h4>
+          <p class="text-[10px] text-indigo-200 leading-tight">En las preguntas de sinonimia contextual o campos asociativos, no basta con dar el significado abstracto. Es **obligatorio justificar el valor exacto que adquiere el término en el contexto del fragmento**.</p>
+        </div>
+      </div>
+      <div class="text-[9px] font-bold text-indigo-300 bg-indigo-900 px-2.5 py-1.5 rounded-lg border border-indigo-800 shrink-0">
+        CATEGORÍA + VALOR CONTEXTUAL + EJEMPLO
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- SECCIÓN DE NOTAS Y HERRAMIENTAS ADICIONALES (NO IMPRIMIBLE) -->
+  <div class="no-print w-full max-w-6xl mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Guía de Redacción para Examen -->
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+      <h3 class="text-sm font-bold uppercase text-indigo-950 mb-3 tracking-wide flex items-center gap-2">
+        <span>📝</span> Plantilla de Redacción Crítica EAU (Semántica)
+      </h3>
+      <div class="p-3 bg-slate-50 rounded-lg text-xs font-mono text-slate-700 leading-relaxed space-y-1" contenteditable="true">
+        En el plano léxico-semántico, destaca la cohesión temática lograda mediante la configuración de un campo asociativo / isotopía en torno a <strong>[concepto temático central]</strong>, articulado con términos como <strong>["ejemplo 1"]</strong>, <strong>["ejemplo 2"]</strong> e <strong>["ejemplo 3"]</strong>. Asimismo, el autor recurre a mecanismos de correferencia, como el uso del sintagma <strong>["sintagma sustituto"]</strong> para aludir a <strong>["referente original"]</strong>, evitando redundancias y dotando de fluidez al discurso periodístico de opinión.
+      </div>
+    </div>
+
+    <!-- Criterios de Evaluación y Checklist -->
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+      <h3 class="text-sm font-bold uppercase text-indigo-950 mb-3 tracking-wide flex items-center gap-2">
+        <span>🎯</span> Checklist de Semántica y Léxico (Examen)
+      </h3>
+      <ul class="text-xs text-slate-600 space-y-2">
+        <li class="flex items-start gap-2">
+          <input type="checkbox" class="mt-0.5 rounded text-indigo-800 focus:ring-indigo-500">
+          <span>¿He diferenciado claramente entre un campo semántico (misma categoría gramatical) y un campo asociativo/isotopía (cualquier categoría)?</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <input type="checkbox" class="mt-0.5 rounded text-indigo-800 focus:ring-indigo-500">
+          <span>¿He argumentado las sustituciones de sinónimos contextuales explicando por qué encajan en el sentido global del fragmento de examen?</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <input type="checkbox" class="mt-0.5 rounded text-indigo-800 focus:ring-indigo-500">
+          <span>¿He justificado la presencia del emisor mediante la identificación de sufijos apreciativos y el léxico valorativo entrecomillado?</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    let isEditMode = false;
+    const initialContent = {};
+
+    window.onload = function() {
+      const editables = document.querySelectorAll('[contenteditable="true"]');
+      editables.forEach((el, index) => {
+        initialContent[index] = el.innerHTML;
+      });
+    };
+
+    // Base de datos de casos semánticos de examen
+    const semanticCases = {
+      correferencia: {
+        type: "Sinonimia por Correferencia (Mecanismo de Cohesión Textual)",
+        segments: [
+          { value: "Sustituto con idéntico referente real", label: "Definición", bg: "bg-indigo-100 text-indigo-950 border-indigo-300" },
+          { value: "Evita redundancias y conecta oraciones", label: "Función Textual", bg: "bg-slate-100 text-slate-900 border-slate-300" },
+          { value: "Cervantes / El manco de Lepanto / El autor del Quijote", label: "Ejemplo EAU", bg: "bg-indigo-50 text-indigo-900 border-indigo-200" },
+          { value: "Explicar que ambos términos apuntan al mismo ente real aunque en el diccionario no sean sinónimos.", label: "Justificación de Examen", bg: "bg-stone-50 text-stone-800 border-stone-200" }
+        ]
+      },
+      doblete: {
+        type: "Evolución Fonética Histórica: Doblete Léxico",
+        segments: [
+          { value: "Doble derivación (Vía popular vs. Vía culta)", label: "Definición", bg: "bg-indigo-100 text-indigo-950 border-indigo-300" },
+          { value: "Enriquece el caudal léxico del idioma", label: "Función Lingüística", bg: "bg-slate-100 text-slate-900 border-slate-300" },
+          { value: "Del latín 'collocare': Colgar (patrimonial) / Colocar (cultismo)", label: "Ejemplo EAU", bg: "bg-indigo-50 text-indigo-900 border-indigo-200" },
+          { value: "Detallar que la voz patrimonial sufrió todas las leyes fonéticas, mientras que el cultismo entró tardíamente sin cambios.", label: "Justificación de Examen", bg: "bg-stone-50 text-stone-800 border-stone-200" }
+        ]
+      },
+      isotopia: {
+        type: "Isotopía o Campo Asociativo de Red Semántica",
+        segments: [
+          { value: "Red de vocablos ligados a un mismo ámbito de la realidad", label: "Definición", bg: "bg-indigo-100 text-indigo-950 border-indigo-300" },
+          { value: "Aporta coherencia temática e hilo conductor global", label: "Función Textual", bg: "bg-slate-100 text-slate-900 border-slate-300" },
+          { value: "Crisis: paro (sust.), desemplear (verb.), devaluado (adj.)", label: "Ejemplo EAU", bg: "bg-indigo-50 text-indigo-900 border-indigo-200" },
+          { value: "Señalar la diversidad de categorías gramaticales unidas por el mismo tema o núcleo semántico del texto.", label: "Justificación de Examen", bg: "bg-stone-50 text-stone-800 border-stone-200" }
+        ]
+      },
+      metonimia: {
+        type: "Tropo por Relación de Contigüidad Física o Lógica",
+        segments: [
+          { value: "Sustitución de un término por otro basado en cercanía real", label: "Definición", bg: "bg-indigo-100 text-indigo-950 border-indigo-300" },
+          { value: "Condensación expresiva y fuerza literaria", label: "Función Textual", bg: "bg-slate-100 text-slate-900 border-slate-300" },
+          { value: "Comerse un plato hondo / Beber un Rioja (continente-contenido)", label: "Ejemplo EAU", bg: "bg-indigo-50 text-indigo-900 border-indigo-200" },
+          { value: "Demostrar que la sustitución es metonímica al responder a la relación física 'el envase por la sustancia'.", label: "Justificación de Examen", bg: "bg-stone-50 text-stone-800 border-stone-200" }
+        ]
+      },
+      antonimia: {
+        type: "Antonimia Gradual y Recíproca de Oposición",
+        segments: [
+          { value: "Oposición léxica que no requiere negación binaria estricta", label: "Definición", bg: "bg-indigo-100 text-indigo-950 border-indigo-300" },
+          { value: "Contraste o matización de posturas en la argumentación", label: "Función Textual", bg: "bg-slate-100 text-slate-900 border-slate-300" },
+          { value: "Gradual: Frío/Caliente (hay templado). Recíproco: Comprar/Vender", label: "Ejemplo EAU", bg: "bg-indigo-50 text-indigo-900 border-indigo-200" },
+          { value: "Explicar que la presencia de un antónimo gradual permite grados intermedios, mientras que el recíproco implica al otro obligatoriamente.", label: "Justificación de Examen", bg: "bg-stone-50 text-stone-800 border-stone-200" }
+        ]
+      }
+    };
+
+    function analyzeSemanticCase() {
+      const select = document.getElementById('semanticSelector');
+      const val = select.value;
+      const typeContainer = document.getElementById('analyzerWordType');
+      const wrapper = document.getElementById('segmentsWrapper');
+
+      if (val === 'default' || !semanticCases[val]) {
+        typeContainer.innerText = "Esperando selección...";
+        wrapper.innerHTML = `<span class="text-xs text-indigo-400 italic col-span-4 self-center">Selecciona un caso práctico en la barra de herramientas superior para desplegar su ficha de análisis crítico y justificación oficial según el corrector de la EAU del País Vasco.</span>`;
+        return;
+      }
+
+      const data = semanticCases[val];
+      typeContainer.innerText = data.type;
+      wrapper.innerHTML = "";
+
+      data.segments.forEach(seg => {
+        const item = document.createElement('div');
+        item.className = `flex flex-col items-center justify-center p-2 rounded-lg border ${seg.bg} shadow-sm transition-transform hover:scale-[1.02] flex-1`;
+        item.innerHTML = `
+          <span class="text-[9px] font-bold uppercase tracking-wider text-indigo-500 mb-1 leading-none text-center">${seg.label}</span>
+          <span class="text-xs font-semibold leading-snug text-center">${seg.value}</span>
+        `;
+        wrapper.appendChild(item);
+      });
+    }
+
+    function toggleEditMode() {
+      isEditMode = !isEditMode;
+      const editableBoxes = document.querySelectorAll('[contenteditable="true"]');
+      const textBtn = document.getElementById('modeText');
+      const iconBtn = document.getElementById('modeIcon');
+      
+      if (isEditMode) {
+        textBtn.innerText = "Modo Informativo / Reiniciar";
+        iconBtn.innerText = "🔒";
+        
+        editableBoxes.forEach(el => {
+          el.classList.add('bg-amber-50', 'border-amber-300');
+          el.innerText = "[EJERCICIO DE SEMÁNTICA: Lee detenidamente el fragmento de opinión del examen. Identifica dos metáforas o metonimias justificadas por su contexto, describe un campo asociativo/isotopía de tres elementos que dé coherencia al texto de examen y propón dos sinónimos contextuales explicando por qué encajan en el sentido global]";
+        });
+      } else {
+        textBtn.innerText = "Modo Ejercicio";
+        iconBtn.innerText = "🔓";
+        
+        editableBoxes.forEach((el, index) => {
+          el.classList.remove('bg-amber-50', 'border-amber-300');
+          el.innerHTML = initialContent[index];
+        });
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Organizador Visual EAU - Antonio Machado y la Generación del 98</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts de perfil académico, literario y editorial -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .serif-title {
+      font-family: 'Cinzel', serif;
+    }
+    .academic-serif {
+      font-family: 'Playfair Display', serif;
+    }
+    /* Estructura proporcional DINA4 Apaisado */
+    .a4-landscape-page {
+      width: 297mm;
+      height: 210mm;
+      max-width: 100%;
+      aspect-ratio: 297 / 210;
+    }
+    @media print {
+      body {
+        background: white;
+        color: black;
+        margin: 0;
+        padding: 0;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .print-fullscreen {
+        width: 297mm !important;
+        height: 210mm !important;
+        border: none !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 8mm !important;
+        page-break-inside: avoid;
+        background: white !important;
+      }
+      @page {
+        size: A4 landscape;
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body class="bg-stone-100 text-stone-800 transition-colors duration-300 min-h-screen py-6 px-4 flex flex-col items-center">
+
+  <!-- BARRA DE HERRAMIENTAS SUPERIOR (NO IMPRIMIBLE) -->
+  <div class="no-print w-full max-w-6xl mb-4 bg-white/80 backdrop-blur-md border border-stone-200 p-4 rounded-xl shadow-sm flex flex-wrap gap-4 items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="p-2 bg-amber-50 rounded-lg text-amber-700">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-lg font-bold text-stone-950 leading-tight">Organizador Visual EAU • Literatura</h1>
+        <p class="text-xs text-stone-500">La Generación del 98 y Antonio Machado en el marco del Decreto 76/2023 (EAU - CAPV)</p>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-3">
+      <!-- Simulador de Poemas Modelo EAU -->
+      <div class="flex items-center gap-2">
+        <label for="poemSelector" class="text-xs font-semibold text-stone-600">Poema de Examen:</label>
+        <select id="poemSelector" onchange="analyzePoem()" class="px-3 py-1.5 border border-stone-300 rounded-lg text-xs font-medium focus:ring-2 focus:ring-amber-500 outline-none">
+          <option value="default">Seleccionar poema de la antología...</option>
+          <option value="olmo">A un olmo seco</option>
+          <option value="caminos">Yo voy soñando caminos</option>
+          <option value="mañana">El mañana efímero</option>
+          <option value="crimen">El crimen fue en Granada</option>
+          <option value="soñe">Soñé que tú me llevabas</option>
+          <option value="noche">Noche de verano</option>
+        </select>
+      </div>
+
+      <!-- Modo Ejercicio -->
+      <button id="toggleModeBtn" onclick="toggleEditMode()" class="px-4 py-2 border border-stone-300 text-stone-700 rounded-lg font-medium text-sm hover:bg-stone-50 flex items-center gap-2 transition">
+        <span id="modeIcon">🔓</span>
+        <span id="modeText">Modo Ejercicio</span>
+      </button>
+
+      <!-- Botón Imprimir -->
+      <button onclick="window.print()" class="px-4 py-2 bg-amber-700 hover:bg-amber-800 text-white rounded-lg font-semibold text-sm flex items-center gap-2 transition shadow-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+        </svg>
+        Descargar en PDF / Imprimir
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTENEDOR DINA4 APAISADO -->
+  <div id="canvas" class="print-fullscreen a4-landscape-page bg-white text-stone-800 shadow-2xl rounded-2xl border border-stone-300 overflow-hidden flex flex-col p-8 transition-transform duration-300 relative justify-between">
+    
+    <!-- ENCABEZADO DE LA HOJA -->
+    <header class="border-b-2 border-stone-900/10 pb-4 mb-3 flex justify-between items-end">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-widest text-amber-700 bg-amber-50 px-2 py-1 rounded">EAU • Educación Literaria (G. 98 y Machado)</span>
+        <h2 class="serif-title text-2xl font-bold text-stone-900 mt-1">Antonio Machado y la Generación del 98</h2>
+      </div>
+      <div class="text-right">
+        <p class="text-xs font-semibold text-stone-500 uppercase tracking-wider">Metodología de Comentario</p>
+        <p class="academic-serif italic text-sm text-amber-900">Evolución, Símbolos y Lectura Crítica de la Antología</p>
+      </div>
+    </header>
+
+    <!-- CUADRÍCULA DE COLUMNAS (3 Bloques de Contenido) -->
+    <main class="grid grid-cols-3 gap-5 flex-grow content-start">
+      
+      <!-- COLUMNA 1: LA GENERACIÓN DEL 98 -->
+      <section class="flex flex-col gap-3 border-r border-dashed border-stone-200 pr-3">
+        <div class="bg-stone-50 p-3 rounded-xl border border-stone-200 hover:border-amber-200 transition">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-5 h-5 flex items-center justify-center bg-amber-700 text-white rounded-full text-[10px] font-bold">1</span>
+            <h3 class="text-xs font-bold uppercase text-stone-900 tracking-wider">La Generación del 98</h3>
+          </div>
+          <p class="text-[10px] text-stone-500 mb-2 leading-tight">Grupo de autores marcados por el Desastre del 98 y la crisis de fin de siglo:</p>
+          
+          <div class="space-y-1.5 text-xs">
+            <div class="p-2 bg-white rounded border border-stone-150">
+              <span class="font-bold text-amber-950 block">El tema de España:</span>
+              <p class="text-[10px] text-stone-600">Búsqueda del "alma" de España en las tierras de <strong>Castilla</strong>, cuyo paisaje sobrio y adusto se convierte en el reflejo de la decadencia nacional.</p>
+            </div>
+            
+            <div class="p-2 bg-white rounded border border-stone-150">
+              <span class="font-bold text-amber-950 block">La Intrahistoria (Unamuno):</span>
+              <p class="text-[10px] text-stone-600">Interés por la vida anónima y callada de la gente del campo, quienes conservan el verdadero espíritu del país frente a los grandes hechos históricos.</p>
+            </div>
+
+            <div class="p-2 bg-white rounded border border-stone-150">
+              <span class="font-bold text-amber-950 block">Estilo Renovador:</span>
+              <p class="text-[10px] text-stone-600">Rechazo de la grandilocuencia decimonónica. Defienden la <strong>sencillez</strong>, la <strong>precisión léxica</strong> (arcaísmos, terruñismo) y el <strong>subjetivismo lírico</strong>.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLUMNA 2: EVOULUCIÓN DE ANTONIO MACHADO -->
+      <section class="flex flex-col gap-3 border-r border-dashed border-stone-200 px-1">
+        <div class="bg-stone-50 p-3 rounded-xl border border-stone-200 hover:border-amber-200 transition flex-grow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-5 h-5 flex items-center justify-center bg-amber-700 text-white rounded-full text-[10px] font-bold">2</span>
+              <h3 class="text-xs font-bold uppercase text-stone-900 tracking-wider font-semibold">Trayectoria Poética</h3>
+            </div>
+            <p class="text-[10px] text-stone-500 mb-2 leading-tight">Fases esenciales exigidas en la respuesta de desarrollo histórico:</p>
+            
+            <div class="space-y-1.5 text-xs">
+              <!-- Primera Etapa -->
+              <div class="bg-white p-2 rounded border border-stone-150">
+                <span class="font-bold text-amber-950 block">1. Modernismo Intimista:</span>
+                <p class="text-[10px] text-stone-600"><em>Soledades. Galerías. Otros poemas</em> (1907). Marcado por la melancolía, el examen del alma, los sueños y la influencia simbolista francesa.</p>
+              </div>
+
+              <!-- Segunda Etapa -->
+              <div class="bg-white p-2 rounded border border-stone-150">
+                <span class="font-bold text-amber-950 block">2. Noventayochismo y Paisaje:</span>
+                <p class="text-[10px] text-stone-600"><em>Campos de Castilla</em> (1912). Proyección existencial y dolor íntimo tras la muerte de Leonor. Se funden el destino trágico nacional y el dolor personal.</p>
+              </div>
+
+              <!-- Tercera Etapa -->
+              <div class="bg-white p-2 rounded border border-stone-150">
+                <span class="font-bold text-amber-950 block">3. Madurez y Exilio:</span>
+                <p class="text-[10px] text-stone-600"><em>Nuevas canciones</em> (1924) y poesía de guerra. Estilo sentencioso (proverbios y cantares), preocupación filosófica, el amor tardío (Guiomar) y el exilio.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLUMNA 3: SÍMBOLOS Y FORMAS MÉTRICAS -->
+      <section class="flex flex-col gap-3 pl-3">
+        <!-- Los Símbolos Machadianos -->
+        <div class="bg-stone-50 p-3 rounded-xl border border-stone-200 hover:border-amber-200 transition">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-5 h-5 flex items-center justify-center bg-amber-700 text-white rounded-full text-[10px] font-bold">3</span>
+            <h3 class="text-xs font-bold uppercase text-stone-900 tracking-wider">El Universo Simbólico</h3>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-[10px] text-stone-600">
+            <div class="bg-white p-1.5 rounded border border-stone-150">
+              <span class="font-bold text-stone-900">La tarde:</span> Decadencia, melancolía, vejez, paso del tiempo.
+            </div>
+            <div class="bg-white p-1.5 rounded border border-stone-150">
+              <span class="font-bold text-stone-900">El camino:</span> Transcurso vital, búsqueda, el vivir fluyendo.
+            </div>
+            <div class="bg-white p-1.5 rounded border border-stone-150">
+              <span class="font-bold text-stone-900">El agua:</span> Si corre, es vida; si se estanca, hastío o muerte.
+            </div>
+            <div class="bg-white p-1.5 rounded border border-stone-150">
+              <span class="font-bold text-stone-900">Las galerías:</span> El mundo interior del alma y del recuerdo.
+            </div>
+          </div>
+        </div>
+
+        <!-- Métrica habitual -->
+        <div class="bg-stone-50 p-3 rounded-xl border border-stone-200 hover:border-amber-200 transition">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="w-5 h-5 flex items-center justify-center bg-amber-700 text-white rounded-full text-[10px] font-bold">4</span>
+            <h3 class="text-xs font-bold uppercase text-stone-900 tracking-wider">Formas Métricas</h3>
+          </div>
+          <p class="text-[10px] text-stone-500 mb-1 leading-tight">Uso magistral de moldes tradicionales y de ascendencia popular:</p>
+          <ul class="text-[10px] text-stone-600 space-y-1 pl-1">
+            <li>• <strong>Silva arromanzada:</strong> Heptasílabos y endecasílabos con rima asonante en versos pares.</li>
+            <li>• <strong>Romance:</strong> Tradición popular castellana. Octosílabos asonantes en los pares.</li>
+            <li>• <strong>Cantares y coplas:</strong> Versos breves de ritmo popular y hondo contenido filosófico.</li>
+          </ul>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ÁREA COMPLEMENTARIA: DESGLOSE INTERACTIVO DE LA ANTOLOGÍA (PREMIUM WIDGET) -->
+    <div id="dynamicAnalyzer" class="bg-amber-50/50 border border-amber-150 p-3 rounded-xl">
+      <div class="flex justify-between items-center mb-1.5">
+        <h4 class="text-xs font-bold text-amber-950 uppercase tracking-wider flex items-center gap-1.5">
+          <span>📖</span> Antología Poética de Examen (Criterio de Corrección EAU)
+        </h4>
+        <span id="analyzerPoemType" class="text-[10px] font-bold text-amber-800 bg-white px-2 py-0.5 rounded border border-amber-200">
+          Esperando selección...
+        </span>
+      </div>
+      
+      <!-- Bloques de análisis crítico visual -->
+      <div id="segmentsWrapper" class="grid grid-cols-4 gap-2 min-h-[52px] bg-white border border-stone-200 rounded-lg p-2 text-center items-stretch">
+        <span class="text-xs text-stone-400 italic col-span-4 self-center">Selecciona un poema en el menú superior para desplegar su ficha de análisis crítico según los requerimientos de la EAU del País Vasco.</span>
+      </div>
+    </div>
+
+    <!-- PIE DE HOJA: CRITERIO DE EVALUACIÓN INEXCUSABLE -->
+    <footer class="mt-3 bg-stone-900 text-white p-3 rounded-xl flex items-center justify-between shadow-inner">
+      <div class="flex items-center gap-3">
+        <span class="text-xl">⚡</span>
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-amber-300">Criterio Fundamental de Corrección EAU (UPV/EHU)</h4>
+          <p class="text-[10px] text-stone-300 leading-tight">Al analizar cualquier poema es mandatorio vincular la **métrica con el tema**, justificar el uso de la **simbología** del autor y ubicarlo en su **etapa** compositiva correspondiente.</p>
+        </div>
+      </div>
+      <div class="text-[9px] font-bold text-amber-300 bg-stone-950 px-2.5 py-1.5 rounded-lg border border-stone-800 shrink-0">
+        MÉTRICA + SÍMBOLO + CONTEXTO
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- SECCIÓN DE NOTAS Y HERRAMIENTAS ADICIONALES (NO IMPRIMIBLE) -->
+  <div class="no-print w-full max-w-6xl mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Guía de Redacción de Literatura para Examen -->
+    <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
+      <h3 class="text-sm font-bold uppercase text-stone-900 mb-3 tracking-wide flex items-center gap-2">
+        <span>📝</span> Plantilla de Análisis de Comentario (EAU)
+      </h3>
+      <div class="p-3 bg-stone-50 rounded-lg text-xs font-mono text-stone-700 leading-relaxed space-y-1" contenteditable="true">
+        El fragmento propuesto pertenece al poema <strong>[título del poema]</strong>, integrado en el libro <strong>[Soledades / Campos de Castilla]</strong>. Temáticamente, el fragmento aborda <strong>[indicar tema como: el dolor existencial por Leonor / la crítica a las dos Españas]</strong>. Métrica y estilísticamente, el autor emplea una estructura de <strong>[silva arromanzada / romance]</strong>, idónea para transmitir un tono reflexivo apoyado en símbolos nucleares como <strong>[mencionar símbolos: el camino, la tarde, el olmo]</strong>, que representan <strong>[explicar la carga conceptual del símbolo]</strong>.
+      </div>
+    </div>
+
+    <!-- Criterios de Evaluación y Checklist -->
+    <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
+      <h3 class="text-sm font-bold uppercase text-stone-900 mb-3 tracking-wide flex items-center gap-2">
+        <span>🎯</span> Checklist del Examen de Literatura (Tema Machado)
+      </h3>
+      <ul class="text-xs text-stone-600 space-y-2">
+        <li class="flex items-start gap-2">
+          <input type="checkbox" class="mt-0.5 rounded text-amber-600 focus:ring-amber-500">
+          <span>¿He situado correctamente el poema en su libro correspondiente (Soledades o Campos de Castilla)?</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <input type="checkbox" class="mt-0.5 rounded text-amber-600 focus:ring-amber-500">
+          <span>¿He argumentado la evolución del estilo de Machado, desde el Modernismo íntimo al Noventayochismo crítico?</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <input type="checkbox" class="mt-0.5 rounded text-amber-600 focus:ring-amber-500">
+          <span>¿He analizado el significado de cada símbolo en el contexto del fragmento de examen?</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    let isEditMode = false;
+    const initialContent = {};
+
+    window.onload = function() {
+      const editables = document.querySelectorAll('[contenteditable="true"]');
+      editables.forEach((el, index) => {
+        initialContent[index] = el.innerHTML;
+      });
+    };
+
+    // Base de datos de poemas para el desglosador interactivo
+    const poemData = {
+      olmo: {
+        type: "Campos de Castilla (1912) - Lírica del Dolor y Esperanza",
+        segments: [
+          { value: "Esperanza frente a la muerte", label: "Núcleo Temático", bg: "bg-amber-100 text-amber-950 border-amber-300" },
+          { value: "Silva-romance (7 y 11 sílabas)", label: "Forma Métrica", bg: "bg-orange-100 text-orange-950 border-orange-300" },
+          { value: "Olmo seco (Leonor); Milagro de la primavera (curación)", label: "Simbolismo Central", bg: "bg-stone-100 text-stone-950 border-stone-300" },
+          { value: "Paralelismo, antítesis, personificación", label: "Recursos de Estilo", bg: "bg-amber-50 text-amber-900 border-amber-200" }
+        ]
+      },
+      caminos: {
+        type: "Soledades. Galerías. Otros poemas (1907) - Modernismo Intimista",
+        segments: [
+          { value: "Vacío existencial y melancolía", label: "Núcleo Temático", bg: "bg-amber-100 text-amber-950 border-amber-300" },
+          { value: "24 versos octosílabos (redondillas y cuartetas)", label: "Forma Métrica", bg: "bg-orange-100 text-orange-950 border-orange-300" },
+          { value: "Camino (vida); la tarde que oscurece (fin de vida)", label: "Simbolismo Central", bg: "bg-stone-100 text-stone-950 border-stone-300" },
+          { value: "Metáfora, personificación, aliteración del viento", label: "Recursos de Estilo", bg: "bg-amber-50 text-amber-900 border-amber-200" }
+        ]
+      },
+      mañana: {
+        type: "Campos de Castilla (1912) - Preocupación Noventayochista",
+        segments: [
+          { value: "Crítica feroz a las dos Españas", label: "Núcleo Temático", bg: "bg-amber-100 text-amber-950 border-amber-300" },
+          { value: "Silva consonante (endecasílabos y heptasílabos)", label: "Forma Métrica", bg: "bg-orange-100 text-orange-950 border-orange-300" },
+          { value: "Charanga y pandereta (decadencia); España que nace (futuro)", label: "Simbolismo Central", bg: "bg-stone-100 text-stone-950 border-stone-300" },
+          { value: "Paralelismo, antítesis violenta, enumeración caótica", label: "Recursos de Estilo", bg: "bg-amber-50 text-amber-900 border-amber-200" }
+        ]
+      },
+      crimen: {
+        type: "Poesía de Guerra - Homenaje y Elegía Heroica",
+        segments: [
+          { value: "Elegía por el asesinato de García Lorca", label: "Núcleo Temático", bg: "bg-amber-100 text-amber-950 border-amber-300" },
+          { value: "Silva arromanzada (7 y 11 sílabas, asonante)", label: "Forma Métrica", bg: "bg-orange-100 text-orange-950 border-orange-300" },
+          { value: "La muerte (personaje que camina con el poeta); Granada", label: "Simbolismo Central", bg: "bg-stone-100 text-stone-950 border-stone-300" },
+          { value: "Apóstrofe, personificación de la muerte, paralelismo", label: "Recursos de Estilo", bg: "bg-amber-50 text-amber-900 border-amber-200" }
+        ]
+      },
+      soñe: {
+        type: "Campos de Castilla (1912) - El Reencuentro Onírico",
+        segments: [
+          { value: "Caminar soñado con la amada muerta", label: "Núcleo Temático", bg: "bg-amber-100 text-amber-950 border-amber-300" },
+          { value: "Romance (16 versos octosílabos, asonante e-a)", label: "Forma Métrica", bg: "bg-orange-100 text-orange-950 border-orange-300" },
+          { value: "Blanca vereda (camino al más allá); monte verde (vida)", label: "Simbolismo Central", bg: "bg-stone-100 text-stone-950 border-stone-300" },
+          { value: "Metáfora onírica, paralelismo sintáctico, derivación", label: "Recursos de Estilo", bg: "bg-amber-50 text-amber-900 border-amber-200" }
+        ]
+      },
+      noche: {
+        type: "Campos de Castilla (1912) - Entrada de la Muerte",
+        segments: [
+          { value: "El momento gélido de la muerte de Leonor", label: "Núcleo Temático", bg: "bg-amber-100 text-amber-950 border-amber-300" },
+          { value: "Romance (16 versos octosílabos, asonante)", label: "Forma Métrica", bg: "bg-orange-100 text-orange-950 border-orange-300" },
+          { value: "Aire gélido (muerte); balcón abierto (umbral)", label: "Simbolismo Central", bg: "bg-stone-100 text-stone-950 border-stone-300" },
+          { value: "Personificación, antítesis gélido/verano, elipsis verbal", label: "Recursos de Estilo", bg: "bg-amber-50 text-amber-900 border-amber-200" }
+        ]
+      }
+    };
+
+    function analyzePoem() {
+      const select = document.getElementById('poemSelector');
+      const val = select.value;
+      const typeContainer = document.getElementById('analyzerPoemType');
+      const wrapper = document.getElementById('segmentsWrapper');
+
+      if (val === 'default' || !poemData[val]) {
+        typeContainer.innerText = "Esperando selección...";
+        wrapper.innerHTML = `<span class="text-xs text-stone-400 italic col-span-4 self-center">Selecciona un poema en el menú superior para desplegar su ficha de análisis crítico según los requerimientos de la EAU del País Vasco.</span>`;
+        return;
+      }
+
+      const data = poemData[val];
+      typeContainer.innerText = data.type;
+      wrapper.innerHTML = "";
+
+      data.segments.forEach(seg => {
+        const item = document.createElement('div');
+        item.className = `flex flex-col items-center justify-center p-2 rounded-lg border ${seg.bg} shadow-sm transition-transform hover:scale-[1.02]`;
+        item.innerHTML = `
+          <span class="text-[10px] font-bold uppercase tracking-wider text-stone-500 mb-1 leading-none">${seg.label}</span>
+          <span class="text-xs font-semibold leading-snug">${seg.value}</span>
+        `;
+        wrapper.appendChild(item);
+      });
+    }
+
+    function toggleEditMode() {
+      isEditMode = !isEditMode;
+      const editableBoxes = document.querySelectorAll('[contenteditable="true"]');
+      const textBtn = document.getElementById('modeText');
+      const iconBtn = document.getElementById('modeIcon');
+      
+      if (isEditMode) {
+        textBtn.innerText = "Modo Informativo / Reiniciar";
+        iconBtn.innerText = "🔒";
+        
+        editableBoxes.forEach(el => {
+          el.classList.add('bg-amber-50', 'border-amber-300');
+          el.innerText = "[EJERCICIO DE COMENTARIO: Escribe aquí tu análisis literario sobre el poema seleccionado del examen. Delimita su núcleo temático, relaciona sus características formales con la etapa lírica del autor, analiza los recursos estilísticos y describe el significado profundo de sus símbolos nucleares]";
+        });
+      } else {
+        textBtn.innerText = "Modo Ejercicio";
+        iconBtn.innerText = "🔓";
+        
+        editableBoxes.forEach((el, index) => {
+          el.classList.remove('bg-amber-50', 'border-amber-300');
+          el.innerHTML = initialContent[index];
+        });
+      }
+    }
+  </script>
+</body>
+</html>

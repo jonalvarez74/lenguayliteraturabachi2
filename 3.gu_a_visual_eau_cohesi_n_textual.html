@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Organizador Visual EAU - La Cohesión Textual</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts de perfil académico y editorial -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .serif-title {
+      font-family: 'Cinzel', serif;
+    }
+    .academic-serif {
+      font-family: 'Playfair Display', serif;
+    }
+    /* Estructura proporcional DINA4 Apaisado */
+    .a4-landscape-page {
+      width: 297mm;
+      height: 210mm;
+      max-width: 100%;
+      aspect-ratio: 297 / 210;
+    }
+    @media print {
+      body {
+        background: white;
+        color: black;
+        margin: 0;
+        padding: 0;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .print-fullscreen {
+        width: 297mm !important;
+        height: 210mm !important;
+        border: none !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 8mm !important;
+        page-break-inside: avoid;
+        background: white !important;
+      }
+      @page {
+        size: A4 landscape;
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 transition-colors duration-300 min-h-screen py-6 px-4 flex flex-col items-center">
+
+  <!-- BARRA DE HERRAMIENTAS SUPERIOR (NO IMPRIMIBLE) -->
+  <div class="no-print w-full max-w-6xl mb-4 bg-white/80 backdrop-blur-md border border-slate-200/80 p-4 rounded-xl shadow-sm flex flex-wrap gap-4 items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="p-2 bg-purple-50 rounded-lg text-purple-600">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-lg font-bold text-slate-900 leading-tight">Organizador Visual EAU • La Cohesión</h1>
+        <p class="text-xs text-slate-500">Mecanismos léxico-semánticos, gramaticales y red de conectores (Decreto 76/2023)</p>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-3">
+      <!-- Buscador de conectores rápido -->
+      <div class="flex items-center gap-2">
+        <label for="connectorSearch" class="text-xs font-semibold text-slate-600">Filtro Conectores:</label>
+        <select id="connectorSearch" onchange="filterConnectors()" class="px-3 py-1.5 border border-slate-300 rounded-lg text-xs font-medium focus:ring-2 focus:ring-purple-500 outline-none">
+          <option value="all">Ver todos</option>
+          <option value="aditivo">Aditivos (+)</option>
+          <option value="adversativo">Adversativos (≠)</option>
+          <option value="consecutivo">Consecutivos (→)</option>
+          <option value="reformulador">Reformuladores (i.e.)</option>
+        </select>
+      </div>
+
+      <!-- Modo Ejercicio -->
+      <button id="toggleModeBtn" onclick="toggleEditMode()" class="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg font-medium text-sm hover:bg-slate-50 flex items-center gap-2 transition">
+        <span id="modeIcon">🔓</span>
+        <span id="modeText">Modo Ejercicio</span>
+      </button>
+
+      <!-- Botón Imprimir -->
+      <button onclick="window.print()" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold text-sm flex items-center gap-2 transition shadow-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+        </svg>
+        Descargar en PDF / Imprimir
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTENEDOR DINA4 APAISADO -->
+  <div id="canvas" class="print-fullscreen a4-landscape-page bg-white text-slate-800 shadow-2xl rounded-2xl border border-slate-300 overflow-hidden flex flex-col p-8 transition-transform duration-300 relative justify-between">
+    
+    <!-- ENCABEZADO DE LA HOJA -->
+    <header class="border-b-2 border-purple-900/10 pb-4 mb-3 flex justify-between items-end">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-widest text-purple-700 bg-purple-50 px-2 py-1 rounded">EAU • Propiedades del Texto (Cohesión)</span>
+        <h2 class="serif-title text-2xl font-bold text-slate-900 mt-1">Mecanismos de Conexión y Red Discursiva</h2>
+      </div>
+      <div class="text-right">
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Metodología de Comentario</p>
+        <p class="academic-serif italic text-sm text-purple-900">Cohesión Léxica, Gramatical y Conectores</p>
+      </div>
+    </header>
+
+    <!-- CUADRÍCULA DE COLUMNAS (3 Bloques de Contenido) -->
+    <main class="grid grid-cols-3 gap-5 flex-grow content-start">
+      
+      <!-- COLUMNA 1: MECANISMOS LÉXICO-SEMÁNTICOS -->
+      <section class="flex flex-col gap-3 border-r border-dashed border-slate-200 pr-3">
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 hover:border-purple-200 transition">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-6 h-6 flex items-center justify-center bg-purple-600 text-white rounded-full text-[10px] font-bold">1</span>
+            <h3 class="text-xs font-bold uppercase text-slate-900 tracking-wider">Mecanismos Léxico-Semánticos</h3>
+          </div>
+          <p class="text-[10px] text-slate-500 mb-2 leading-tight">Garantizan la continuidad temática relacionando el significado de los vocablos:</p>
+          
+          <div class="space-y-1.5 text-xs">
+            <div class="p-2 bg-white rounded border border-slate-150">
+              <span class="font-bold text-purple-950 block">Recurrencia (Repetición):</span>
+              <p class="text-[11px] text-slate-600">Exacta (léxica) o de la misma familia conceptual (semántica).</p>
+            </div>
+            
+            <div class="p-2 bg-white rounded border border-slate-150">
+              <span class="font-bold text-purple-950 block">Relaciones de Significado:</span>
+              <ul class="text-[10px] text-slate-600 space-y-0.5 mt-1">
+                <li>• <strong>Sinonimia:</strong> Equivalente (ej: <em>morir / fallecer</em>). Correferencia.</li>
+                <li>• <strong>Hiperonimia/Hiponimia:</strong> Género-especie (ej: <em>flor / rosa</em>).</li>
+                <li>• <strong>Meronimia/Holonimia:</strong> Parte-todo (ej: <em>pedal / bicicleta</em>).</li>
+              </ul>
+            </div>
+
+            <div class="p-2 bg-white rounded border border-slate-150">
+              <span class="font-bold text-purple-950 block">Campos y Redes:</span>
+              <p class="text-[11px] text-slate-600"><strong>Isotopía (Campo asociativo):</strong> Palabras ligadas a una misma realidad, sin importar su categoría gramatical (ej. fútbol: <em>árbitro, estadio, silbato, chutar</em>).</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLUMNA 2: MECANISMOS GRAMATICALES Y DE REFERENCIA -->
+      <section class="flex flex-col gap-3 border-r border-dashed border-slate-200 px-1">
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 hover:border-purple-200 transition flex-grow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-6 h-6 flex items-center justify-center bg-purple-600 text-white rounded-full text-[10px] font-bold">2</span>
+              <h3 class="text-xs font-bold uppercase text-slate-900 tracking-wider">Mecanismos Gramaticales</h3>
+            </div>
+            <p class="text-[10px] text-slate-500 mb-2 leading-tight">Establecen la cohesión formal y estructural de las secuencias:</p>
+            
+            <div class="space-y-2 text-xs">
+              <!-- Deixis Endofórica -->
+              <div class="bg-white p-2 rounded border border-slate-150">
+                <span class="font-bold text-purple-950 block">Deixis Endofórica (Referencia interna):</span>
+                <div class="grid grid-cols-2 gap-2 text-[10px] mt-1">
+                  <div class="bg-purple-50/50 p-1 rounded border border-purple-100">
+                    <span class="font-bold text-purple-800">Anáfora:</span> Alude a un elemento ya mencionado en el texto.
+                  </div>
+                  <div class="bg-purple-50/50 p-1 rounded border border-purple-100">
+                    <span class="font-bold text-purple-800">Catáfora:</span> Anticipa un término que aparecerá después.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Deixis Extratextual -->
+              <div class="bg-white p-2 rounded border border-slate-150">
+                <span class="font-bold text-purple-950 block">Deixis Extratextual (Señalamiento):</span>
+                <p class="text-[11px] text-slate-600">Vincula el texto con el contexto: <strong>Personal</strong> (yo, nosotros), <strong>Temporal</strong> (hoy, ayer, tiempos verbales) y <strong>Espacial</strong> (aquí, allí, este).</p>
+              </div>
+
+              <!-- Elipsis y Paralelismos -->
+              <div class="bg-white p-2 rounded border border-slate-150">
+                <span class="font-bold text-purple-950 block">Elisión y Ritmo:</span>
+                <ul class="text-[10px] text-slate-600 space-y-1 mt-1">
+                  <li>• <strong>Elipsis:</strong> Omisión voluntaria de términos sobreentendidos para evitar la redundancia (ej. elisión de sujeto).</li>
+                  <li>• <strong>Paralelismo:</strong> Repetición de estructuras sintácticas idénticas para reforzar el ritmo argumentativo.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLUMNA 3: CONECTORES Y MARCADORES DISCURSIVOS -->
+      <section class="flex flex-col gap-3 pl-3">
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 hover:border-purple-200 transition">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-6 h-6 flex items-center justify-center bg-purple-600 text-white rounded-full text-[10px] font-bold">3</span>
+            <h3 class="text-xs font-bold uppercase text-slate-900 tracking-wider">Marcadores y Conectores</h3>
+          </div>
+          <p class="text-[10px] text-slate-500 mb-2 leading-tight">Articulan las unidades de discurso y organizan el razonamiento:</p>
+          
+          <div class="space-y-1.5 text-xs">
+            <div id="conn-aditivo" class="p-1.5 rounded bg-white border border-slate-150 transition-all">
+              <span class="font-bold text-purple-950">Aditivos (+):</span> 
+              <span class="text-[10px] text-slate-500 block">Suman información: <em>además, asimismo, incluso, de igual modo</em>.</span>
+            </div>
+            
+            <div id="conn-adversativo" class="p-1.5 rounded bg-white border border-slate-150 transition-all">
+              <span class="font-bold text-purple-950">Adversativos / Contraste (≠):</span> 
+              <span class="text-[10px] text-slate-500 block">Oposición: <em>sin embargo, no obstante, empero, por el contrario</em>.</span>
+            </div>
+            
+            <div id="conn-consecutivo" class="p-1.5 rounded bg-white border border-slate-150 transition-all">
+              <span class="font-bold text-purple-950">Consecutivos / Causales (→ / ∵):</span> 
+              <span class="text-[10px] text-slate-500 block">Efecto o causa: <em>por lo tanto, en consecuencia, porque, dado que</em>.</span>
+            </div>
+
+            <div id="conn-reformulador" class="p-1.5 rounded bg-white border border-slate-150 transition-all">
+              <span class="font-bold text-purple-950">Reformuladores (i.e.):</span> 
+              <span class="text-[10px] text-slate-500 block">Aclaran o resumen: <em>es decir, o sea, en conclusión, en síntesis</em>.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- PIE DE HOJA: CRITERIO DE EVALUACIÓN INEXCUSABLE -->
+    <footer class="mt-3 bg-purple-900 text-white p-3 rounded-xl flex items-center justify-between shadow-inner">
+      <div class="flex items-center gap-3">
+        <span class="text-xl">⚡</span>
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-purple-200">Requisito Obligatorio EAU (UPV/EHU)</h4>
+          <p class="text-[10px] text-purple-50 leading-tight">El mero listado teórico de mecanismos de cohesión se califica con **0 puntos**. Es mandatorio justificar con el ejemplo literal del texto (entrecomillado) y explicar su función cohesiva.</p>
+        </div>
+      </div>
+      <div class="text-[9px] font-bold text-purple-200 bg-purple-950 px-2.5 py-1.5 rounded-lg border border-purple-800 shrink-0">
+        MARCA + EJEMPLO CITADO + ANÁLISIS
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- SECCIÓN DE NOTAS Y HERRAMIENTAS ADICIONALES (NO IMPRIMIBLE) -->
+  <div class="no-print w-full max-w-6xl mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- El Comentario de Cohesión: Guía de Redacción -->
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+      <h3 class="text-sm font-bold uppercase text-purple-900 mb-3 tracking-wide flex items-center gap-2">
+        <span>📝</span> Plantilla de Análisis de Cohesión (EAU)
+      </h3>
+      <div class="p-3 bg-slate-50 rounded-lg text-xs font-mono text-slate-700 leading-relaxed space-y-1" contenteditable="true">
+        En el plano léxico-semántico, destaca la cohesión temática lograda mediante la recurrencia léxica del término <strong>[término X]</strong> (líneas A, B) y su campo asociativo de <strong>[tema del texto]</strong>, con vocablos como <strong>["ejemplo 1"]</strong> e <strong>["ejemplo 2"]</strong>. Asimismo, observamos una relación de sinonimia contextual/correferencia entre <strong>["concepto inicial"]</strong> y <strong>["sustituto"]</strong> para evitar redundancias...
+      </div>
+    </div>
+
+    <!-- Criterios de Evaluación y Checklist -->
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+      <h3 class="text-sm font-bold uppercase text-purple-900 mb-3 tracking-wide flex items-center gap-2">
+        <span>🎯</span> Checklist del Examen de Cohesión
+      </h3>
+      <ul class="text-xs text-slate-600 space-y-2">
+        <li class="flex items-start gap-2">
+          <input type="checkbox" class="mt-0.5 rounded text-purple-600 focus:ring-purple-500">
+          <span>¿He identificado tanto mecanismos léxicos (sinónimos, isotopías) como gramaticales (deixis, elipsis)?</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <input type="checkbox" class="mt-0.5 rounded text-purple-600 focus:ring-purple-500">
+          <span>¿He explicado la diferencia exacta entre anáfora (alusión anterior) y catáfora (anticipación)?</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <input type="checkbox" class="mt-0.5 rounded text-purple-600 focus:ring-purple-500">
+          <span>¿He citado de forma literal e indicado las líneas aproximadas de cada conector y marcador discursivo?</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    let isEditMode = false;
+    const initialContent = {};
+
+    window.onload = function() {
+      const editables = document.querySelectorAll('[contenteditable="true"]');
+      editables.forEach((el, index) => {
+        initialContent[index] = el.innerHTML;
+      });
+    };
+
+    function filterConnectors() {
+      const select = document.getElementById('connectorSearch');
+      const val = select.value;
+      
+      const ids = ['conn-aditivo', 'conn-adversativo', 'conn-consecutivo', 'conn-reformulador'];
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        el.className = "p-1.5 rounded bg-white border border-slate-150 transition-all";
+      });
+
+      if (val !== 'all') {
+        const target = document.getElementById('conn-' + val);
+        if (target) {
+          target.className = "p-1.5 rounded border-purple-400 bg-purple-50 font-semibold scale-[1.02] shadow-sm";
+        }
+      }
+    }
+
+    function toggleEditMode() {
+      isEditMode = !isEditMode;
+      const editableBoxes = document.querySelectorAll('[contenteditable="true"]');
+      const textBtn = document.getElementById('modeText');
+      const iconBtn = document.getElementById('modeIcon');
+      
+      if (isEditMode) {
+        textBtn.innerText = "Modo Informativo / Reiniciar";
+        iconBtn.innerText = "🔒";
+        
+        editableBoxes.forEach(el => {
+          el.classList.add('bg-amber-50', 'border-amber-300');
+          el.innerText = "[EJERCICIO DE COHESIÓN: Lee atentamente el texto propuesto para el examen. Localiza tres mecanismos léxico-semánticos diferentes, dos deícticos (uno anafórico y otro temporal) y tres conectores discursivos de diferente función. Redacta el análisis formal siguiendo el guion estructurado de esta plantilla]";
+        });
+      } else {
+        textBtn.innerText = "Modo Ejercicio";
+        iconBtn.innerText = "🔓";
+        
+        editableBoxes.forEach((el, index) => {
+          el.classList.remove('bg-amber-50', 'border-amber-300');
+          el.innerHTML = initialContent[index];
+        });
+      }
+    }
+  </script>
+</body>
+</html>

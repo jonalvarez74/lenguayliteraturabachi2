@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Índice General y Hoja de Ruta EAU - Lengua Castellana y Literatura II</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts de perfil académico y de diseño editorial -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .serif-title {
+      font-family: 'Cinzel', serif;
+    }
+    .academic-serif {
+      font-family: 'Playfair Display', serif;
+    }
+    /* Estructura proporcional DINA4 Apaisado fija para visualización en pantalla e impresión */
+    .a4-landscape-page {
+      width: 297mm;
+      height: 210mm;
+      max-width: 100%;
+      aspect-ratio: 297 / 210;
+    }
+    /* Animaciones de filtrado */
+    .unit-card {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .unit-card.dimmed {
+      opacity: 0.15;
+      transform: scale(0.97);
+      filter: grayscale(80%);
+    }
+    @media print {
+      body {
+        background: white;
+        color: black;
+        margin: 0;
+        padding: 0;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .print-fullscreen {
+        width: 297mm !important;
+        height: 210mm !important;
+        border: none !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 6mm 10mm !important;
+        page-break-inside: avoid;
+        background: white !important;
+      }
+      /* Forzar impresión de fondos en navegadores */
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      @page {
+        size: A4 landscape;
+        margin: 0;
+      }
+      /* Ocultar elementos de estado interactivos al imprimir para dejar limpia la hoja */
+      .status-dot, .progress-selector {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-900 min-h-screen py-4 px-4 flex flex-col items-center justify-start">
+
+  <!-- BARRA DE HERRAMIENTAS SUPERIOR (NO IMPRIMIBLE) -->
+  <div class="no-print w-full max-w-[297mm] mb-3 bg-white/80 backdrop-blur-md border border-slate-200 p-3 rounded-xl shadow-sm flex flex-wrap gap-4 items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="p-2 bg-blue-600 text-white rounded-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-sm font-bold text-slate-950 leading-tight">Ficha-Índice General de la Materia</h1>
+        <p class="text-[11px] text-slate-500 font-medium">Temario unificado EAU para 2.º de Bachillerato (Decreto 76/2023 - País Vasco)</p>
+      </div>
+    </div>
+
+    <!-- Filtros de Bloques Didácticos -->
+    <div class="flex gap-1">
+      <button onclick="filterCategory('all')" id="btn-all" class="px-3 py-1 text-[11px] font-bold rounded-lg transition border bg-slate-950 text-white border-transparent">TODOS</button>
+      <button onclick="filterCategory('textual')" id="btn-textual" class="px-3 py-1 text-[11px] font-bold rounded-lg transition border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center gap-1.5">
+        <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>COMENTARIO
+      </button>
+      <button onclick="filterCategory('gramatica')" id="btn-gramatica" class="px-3 py-1 text-[11px] font-bold rounded-lg transition border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center gap-1.5">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>GRAMÁTICA
+      </button>
+      <button onclick="filterCategory('literatura')" id="btn-literatura" class="px-3 py-1 text-[11px] font-bold rounded-lg transition border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center gap-1.5">
+        <span class="w-2.5 h-2.5 rounded-full bg-amber-600"></span>LITERATURA
+      </button>
+    </div>
+
+    <!-- Controles de Progreso y Descarga -->
+    <div class="flex items-center gap-3">
+      <!-- Reiniciar Progreso -->
+      <button onclick="resetAllProgress()" class="text-[11px] font-bold text-red-600 hover:text-red-700 transition" title="Reiniciar checklist de estudio">
+        🔄 Reiniciar Progreso
+      </button>
+      <!-- Botón Imprimir -->
+      <button onclick="window.print()" class="px-4 py-1.5 bg-slate-800 hover:bg-slate-900 text-white rounded-lg font-semibold text-xs flex items-center gap-1.5 transition shadow-sm border border-slate-950">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+        </svg>
+        Imprimir Hoja (A4)
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTENEDOR DINA4 APAISADO -->
+  <div id="canvas" class="print-fullscreen a4-landscape-page bg-white text-slate-800 shadow-2xl rounded-2xl border border-slate-300 overflow-hidden flex flex-col p-6 transition-all duration-300 relative justify-between">
+    
+    <!-- ENCABEZADO DE LA HOJA -->
+    <header class="border-b-2 border-slate-900/10 pb-2.5 mb-3 flex justify-between items-end">
+      <div>
+        <span class="text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded border border-indigo-200 bg-indigo-50 text-indigo-800">
+          EAU • MARCO CURRICULAR VASCO (GOBIERNO VASCO)
+        </span>
+        <h2 class="serif-title text-xl font-bold text-slate-900 mt-1">
+          Guía de Contenidos de Lengua Castellana y Literatura II
+        </h2>
+      </div>
+      
+      <!-- Barra de Progreso de Estudio Interactiva (Oculta en Impresión) -->
+      <div class="no-print flex items-center gap-3 bg-slate-50 border border-slate-200 px-3 py-1 rounded-lg">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">PROGRESO DE ESTUDIO:</span>
+        <div class="w-32 bg-slate-200 h-2.5 rounded-full overflow-hidden">
+          <div id="globalProgressBar" class="bg-indigo-600 h-full transition-all duration-500" style="width: 0%;"></div>
+        </div>
+        <span id="globalProgressText" class="text-[11px] font-bold text-indigo-700">0%</span>
+      </div>
+
+      <div class="text-right">
+        <p class="text-[9px] font-semibold text-slate-500 uppercase tracking-wider">MAPA-ÍNDICE INTEGRADO</p>
+        <p class="academic-serif italic text-xs text-slate-800">Saber científico, rigor analítico y lecturas críticas</p>
+      </div>
+    </header>
+
+    <!-- CUADRÍCULA DE COLUMNAS (Áreas de Examen) -->
+    <main class="grid grid-cols-3 gap-4 flex-grow content-start text-[11px]">
+      
+      <!-- COLUMNA 1: COMENTARIO Y PROPIEDADES TEXTUALES (Tarjetas 1-4) -->
+      <section class="flex flex-col gap-2.5 border-r border-dashed border-slate-200 pr-2">
+        <div class="text-[9px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-0.5 mb-0.5 flex items-center justify-between">
+          <span>A. Propiedades y Comentario de Texto</span>
+          <span class="text-blue-600">★ 4.0 PUNTOS</span>
+        </div>
+
+        <!-- Tarjeta 1: Opinión -->
+        <div id="card-1" data-category="textual" class="unit-card bg-slate-50 border border-slate-200 p-2.5 rounded-lg hover:shadow-sm">
+          <div class="flex justify-between items-start mb-1">
+            <h3 class="font-bold text-blue-900 uppercase text-[10px]">1. Textos de Opinión y Síntesis</h3>
+            <div class="flex items-center gap-1">
+              <span id="dot-1" class="status-dot w-2 h-2 rounded-full bg-slate-300"></span>
+              <select onchange="updateProgress(1, this.value)" id="select-1" class="progress-selector text-[9px] font-bold text-slate-500 border rounded px-1 py-0.2 bg-white outline-none">
+                <option value="0">Pendiente</option>
+                <option value="1">Estudiado</option>
+                <option value="2">Repasado</option>
+              </select>
+            </div>
+          </div>
+          <p class="text-slate-600 text-[10px] leading-snug">
+            <strong>Tema:</strong> Máx. 10 palabras; grupo nominal abstracto (ej: <em>'Defensa de...'</em>). No copiar título. <br>
+            <strong>Resumen:</strong> Extensión ~25% (8-10 líneas). Párrafo único, objetivo, en 3.ª persona, sin citas literales. <br>
+            <strong>Géneros de opinión:</strong> Editorial (no firmado), columna (estilo literario) y artículo.
+          </p>
+        </div>
+
+        <!-- Tarjeta 2: Coherencia -->
+        <div id="card-2" data-category="textual" class="unit-card bg-slate-50 border border-slate-200 p-2.5 rounded-lg hover:shadow-sm">
+          <div class="flex justify-between items-start mb-1">
+            <h3 class="font-bold text-blue-900 uppercase text-[10px]">2. La Coherencia Textual</h3>
+            <div class="flex items-center gap-1">
+              <span id="dot-2" class="status-dot w-2 h-2 rounded-full bg-slate-300"></span>
+              <select onchange="updateProgress(2, this.value)" id="select-2" class="progress-selector text-[9px] font-bold text-slate-500 border rounded px-1 py-0.2 bg-white outline-none">
+                <option value="0">Pendiente</option>
+                <option value="1">Estudiado</option>
+                <option value="2">Repasado</option>
+              </select>
+            </div>
+          </div>
+          <p class="text-slate-600 text-[10px] leading-snug">
+            <strong>Estructura Interna:</strong> Delimitación de Introducción, Cuerpo argumentativo y Conclusión. <br>
+            <strong>Ubicación de la Tesis:</strong> Deductiva/Analizante (inicio), Inductiva/Sintetizante (cierre), Encuadrada/Circular (inicio y cierre) y Paralela (mismo rango).
+          </p>
+        </div>
+
+        <!-- Tarjeta 3: Cohesión -->
+        <div id="card-3" data-category="textual" class="unit-card bg-slate-50 border border-slate-200 p-2.5 rounded-lg hover:shadow-sm">
+          <div class="flex justify-between items-start mb-1">
+            <h3 class="font-bold text-blue-900 uppercase text-[10px]">3. La Cohesión Textual</h3>
+            <div class="flex items-center gap-1">
+              <span id="dot-3" class="status-dot w-2 h-2 rounded-full bg-slate-300"></span>
+              <select onchange="updateProgress(3, this.value)" id="select-3" class="progress-selector text-[9px] font-bold text-slate-500 border rounded px-1 py-0.2 bg-white outline-none">
+                <option value="0">Pendiente</option>
+                <option value="1">Estudiado</option>
+                <option value="2">Repasado</option>
+              </select>
+            </div>
+          </div>
+          <p class="text-slate-600 text-[10px] leading-snug">
+            <strong>Léxica:</strong> Recurrencia, sinonimia referencial (correferencia) e isotopía temática. <br>
+            <strong>Gramatical:</strong> Deixis endofórica (anáfora/catáfora), deixis extratextual y elipsis. <br>
+            <strong>Conectores:</strong> Aditivos (+), adversativos (≠), consecutivos (→) y reformuladores.
+          </p>
+        </div>
+
+        <!-- Tarjeta 4: Adecuación -->
+        <div id="card-4" data-category="textual" class="unit-card bg-slate-50 border border-slate-200 p-2.5 rounded-lg hover:shadow-sm">
+          <div class="flex justify-between items-start mb-1">
+            <h3 class="font-bold text-blue-900 uppercase text-[10px]">4. La Adecuación Textual</h3>
+            <div class="flex items-center gap-1">
+              <span id="dot-4" class="status-dot w-2 h-2 rounded-full bg-slate-300"></span>
+              <select onchange="updateProgress(4, this.value)" id="select-4" class="progress-selector text-[9px] font-bold text-slate-500 border rounded px-1 py-0.2 bg-white outline-none">
+                <option value="0">Pendiente</option>
+                <option value="1">Estudiado</option>
+                <option value="2">Repasado</option>
+              </select>
+            </div>
+          </div>
+          <p class="text-slate-600 text-[10px] leading-snug">
+            <strong>Factores Pragmáticos:</strong> Distancia social emisor-receptor, canal e intención. <br>
+            <strong>Registro:</strong> Formal/Estándar con licencias expresivas coloquiales de opinión. <br>
+            <strong>Modalización:</strong> Marcas de subjetividad (deixis 1ª p., léxico valorativo, exclamativas).
+          </p>
+        </div>
+      </section>
+
+      <!-- COLUMNA 2: GRAMÁTICA CIENTÍFICA RAE - NGLE/GTG (Tarjetas 5-7) -->
+      <section class="flex flex-col gap-2.5 border-r border-dashed border-slate-200 px-1">
+        <div class="text-[9px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-0.5 mb-0.5 flex items-center justify-between">
+          <span>B. Gramática y Conocimiento de la Lengua</span>
+          <span class="text-emerald-600">★ 4.0 PUNTOS</span>
+        </div>
+
+        <!-- Tarjeta 5: Morfología -->
+        <div id="card-5" data-category="gramatica" class="unit-card bg-slate-50 border border-slate-200 p-2.5 rounded-lg hover:shadow-sm">
+          <div class="flex justify-between items-start mb-1">
+            <h3 class="font-bold text-emerald-900 uppercase text-[10px]">5. Morfología de la Palabra</h3>
+            <div class="flex items-center gap-1">
+              <span id="dot-5" class="status-dot w-2 h-2 rounded-full bg-slate-300"></span>
+              <select onchange="updateProgress(5, this.value)" id="select-5" class="progress-selector text-[9px] font-bold text-slate-500 border rounded px-1 py-0.2 bg-white outline-none">
+                <option value="0">Pendiente</option>
+                <option value="1">Estudiado</option>
+                <option value="2">Repasado</option>
+              </select>
+            </div>
+          </div>
+          <p class="text-slate-600 text-[10px] leading-snug">
+            <strong>Estructura:</strong> Segmentación de Raíz, Morfemas Flexivos (género, número, VT, TAM, PN) y Derivativos (prefijos, sufijos apreciativos, interfijos). <br>
+            <strong>Formación (NGLE):</strong> Simple, Derivada, Compuesta y Parasintética (doble vía de adición simultánea de prefijo y sufijo). <br>
+            <strong>GTG:</strong> Alomorfos, bases compositivas cultas, segmento nulo (Ø).
+          </p>
+        </div>
+
+        <!-- Tarjeta 6: Sintaxis -->
+        <div id="card-6" data-category="gramatica" class="unit-card bg-slate-50 border border-slate-200 p-2.5 rounded-lg hover:shadow-sm">
+          <div class="flex justify-between items-start mb-1">
+            <h3 class="font-bold text-emerald-900 uppercase text-[10px]">6. Sintaxis Funcional</h3>
+            <div class="flex items-center gap-1">
+              <span id="dot-6" class="status-dot w-2 h-2 rounded-full bg-slate-300"></span>
+              <select onchange="updateProgress(6, this.value)" id="select-6" class="progress-selector text-[9px] font-bold text-slate-500 border rounded px-1 py-0.2 bg-white outline-none">
+                <option value="0">Pendiente</option>
+                <option value="1">Estudiado</option>
+                <option value="2">Repasado</option>
+              </select>
+            </div>
+          </div>
+          <p class="text-slate-600 text-[10px] leading-snug">
+            <strong>Sintagma Preposicional:</strong> Preposición como **núcleo** que rige un **término**. <br>
+            <strong>Subordinación (NGLE):</strong> Sustantivas (sustitución por "esto"), Relativos Libres (sin antecedente: <em>quien</em>) y Semilibres (artículo + que). <br>
+            <strong>Construcciones:</strong> Relaciones lógicas causales, finales, concesivas. <br>
+            <strong>Valores de SE:</strong> Clasificación dual con o sin función (pasiva refleja).
+          </p>
+        </div>
+
+        <!-- Tarjeta 7: Semántica -->
+        <div id="card-7" data-category="gramatica" class="unit-card bg-slate-50 border border-slate-200 p-2.5 rounded-lg hover:shadow-sm">
+          <div class="flex justify-between items-start mb-1">
+            <h3 class="font-bold text-emerald-900 uppercase text-[10px]">7. Lexicología y Semántica</h3>
+            <div class="flex items-center gap-1">
+              <span id="dot-7" class="status-dot w-2 h-2 rounded-full bg-slate-300"></span>
+              <select onchange="updateProgress(7, this.value)" id="select-7" class="progress-selector text-[9px] font-bold text-slate-500 border rounded px-1 py-0.2 bg-white outline-none">
+                <option value="0">Pendiente</option>
+                <option value="1">Estudiado</option>
+                <option value="2">Repasado</option>
+              </select>
+            </div>
+          </div>
+          <p class="text-slate-600 text-[10px] leading-snug">
+            <strong>Relaciones:</strong> Denotación y connotación. Sinonimia contextual y correferencia. Antonimia gradual, complementaria y recíproca. Polisemia vs. homonimia. <br>
+            <strong>Caudal Léxico:</strong> Palabras patrimoniales, cultismos, dobletes históricos. Préstamos crudos (xenismos) y adaptados. Tecnicismos científicos.
+          </p>
+        </div>
+      </section>
+
+      <!-- COLUMNA 3: EDUCACIÓN LITERARIA DEL SIGLO XX (Tarjetas 8-10) -->
+      <section class="flex flex-col gap-2.5 pl-2">
+        <div class="text-[9px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-0.5 mb-0.5 flex items-center justify-between">
+          <span>C. Educación Literaria del Siglo XX</span>
+          <span class="text-amber-700">★ 2.0 PUNTOS</span>
+        </div>
+
+        <!-- Tarjeta 8: Machado -->
+        <div id="card-8" data-category="literatura" class="unit-card bg-slate-50 border border-slate-200 p-2.5 rounded-lg hover:shadow-sm">
+          <div class="flex justify-between items-start mb-1">
+            <h3 class="font-bold text-amber-900 uppercase text-[10px]">8. Antonio Machado y el 98</h3>
+            <div class="flex items-center gap-1">
+              <span id="dot-8" class="status-dot w-2 h-2 rounded-full bg-slate-300"></span>
+              <select onchange="updateProgress(8, this.value)" id="select-8" class="progress-selector text-[9px] font-bold text-slate-500 border rounded px-1 py-0.2 bg-white outline-none">
+                <option value="0">Pendiente</option>
+                <option value="1">Estudiado</option>
+                <option value="2">Repasado</option>
+              </select>
+            </div>
+          </div>
+          <p class="text-slate-600 text-[10px] leading-snug">
+            <strong>Generación del 98:</strong> Desastre del 98, intrahistoria de Unamuno, paisaje adusto de Castilla como espejo del alma nacional, estilo sencillo y preciso. <br>
+            <strong>Antonio Machado:</strong> Del modernismo intimista (*Soledades*) a la preocupación crítica y lírica del dolor por Leonor (*Campos de Castilla*). Símbolos (camino, tarde, agua corriente, olmo verdecido).
+          </p>
+        </div>
+
+        <!-- Tarjeta 9: Lorca -->
+        <div id="card-9" data-category="literatura" class="unit-card bg-slate-50 border border-slate-200 p-2.5 rounded-lg hover:shadow-sm">
+          <div class="flex justify-between items-start mb-1">
+            <h3 class="font-bold text-amber-900 uppercase text-[10px]">9. García Lorca y el 27</h3>
+            <div class="flex items-center gap-1">
+              <span id="dot-9" class="status-dot w-2 h-2 rounded-full bg-slate-300"></span>
+              <select onchange="updateProgress(9, this.value)" id="select-9" class="progress-selector text-[9px] font-bold text-slate-500 border rounded px-1 py-0.2 bg-white outline-none">
+                <option value="0">Pendiente</option>
+                <option value="1">Estudiado</option>
+                <option value="2">Repasado</option>
+              </select>
+            </div>
+          </div>
+          <p class="text-slate-600 text-[10px] leading-snug">
+            <strong>Generación del 27:</strong> Síntesis de vanguardia y tradición lírica clásica, "Las Sinsombrero" (rebelión creadora), evolución formal y rehumanización surrealista. <br>
+            <strong>Lorca y teatro:</strong> *La casa de Bernarda Alba* (drama de la autoridad vs. libertad del deseo vital; acoso rural de la mujer; bastón de mando, vestido verde, caballo, río de libertad vs. pozo estancado).
+          </p>
+        </div>
+
+        <!-- Tarjeta 10: Laforet -->
+        <div id="card-10" data-category="literatura" class="unit-card bg-slate-50 border border-slate-200 p-2.5 rounded-lg hover:shadow-sm">
+          <div class="flex justify-between items-start mb-1">
+            <h3 class="font-bold text-amber-900 uppercase text-[10px]">10. Carmen Laforet y "Nada"</h3>
+            <div class="flex items-center gap-1">
+              <span id="dot-10" class="status-dot w-2 h-2 rounded-full bg-slate-300"></span>
+              <select onchange="updateProgress(10, this.value)" id="select-10" class="progress-selector text-[9px] font-bold text-slate-500 border rounded px-1 py-0.2 bg-white outline-none">
+                <option value="0">Pendiente</option>
+                <option value="1">Estudiado</option>
+                <option value="2">Repasado</option>
+              </select>
+            </div>
+          </div>
+          <p class="text-slate-600 text-[10px] leading-snug">
+            <strong>Novela de los años 40:</strong> Misera de posguerra, censura rígida. Vertiente del existencialismo y tremendismo. <br>
+            <strong>"Nada" (Nadal 1944):</strong> Perspectiva de Andrea como narradora-testigo de posguerra. Estructura circular y tripartita. Binarización espacial: sordidez opresiva de la calle Aribau vs. oasis luminoso exterior.
+          </p>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- PLANIFICADOR DE REPASO DIRECTO / CALIBRADOR (Oculto en Impresión) -->
+    <div id="directRepasoArea" class="no-print bg-slate-50 border border-slate-200 p-2 rounded-lg mt-2 flex items-center justify-between text-[11px]">
+      <div class="flex items-center gap-2">
+        <span class="text-xs">📋</span>
+        <div class="font-bold text-slate-800 uppercase tracking-wider text-[9px]">Planificador de Repaso de Examen (EAU)</div>
+      </div>
+      <div class="text-[10px] font-mono text-slate-600" contenteditable="true">
+        [SESIÓN DE CONTROL] Para lograr la puntuación máxima de 10/10, asegúrate de citar de forma literal entre comillas todas las marcas y alomorfos identificados.
+      </div>
+    </div>
+
+    <!-- PIE DE HOJA: LA REGLA DE ORO DE LA MATERIA (Imprimible y Unificada) -->
+    <footer class="mt-2.5 bg-slate-900 text-white p-3 rounded-xl flex items-center justify-between shadow-inner">
+      <div class="flex items-center gap-2">
+        <span class="text-lg">⚡</span>
+        <div>
+          <h4 class="text-[9px] font-bold uppercase tracking-wider text-indigo-300">Regla de Oro Inexcusable de la EAU (UPV/EHU)</h4>
+          <p class="text-[10px] leading-tight text-slate-300">Todo rasgo, marca de modalización o procedimiento formal identificado **debe ir acompañado inexcusablemente de un ejemplo textual literal extraído del fragmento de examen y citado entre comillas**. La identificación teórica sin muestra real se califica directamente con 0 puntos.</p>
+        </div>
+      </div>
+      <div class="text-[9px] font-bold text-indigo-300 bg-slate-950 px-2.5 py-1.5 rounded-lg border border-slate-800 shrink-0 uppercase">
+        TEORÍA + EJEMPLO CITADO = APTO
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    // Sistema dinámico de almacenamiento local para progreso del alumnado
+    const totalUnits = 10;
+    const progressState = {};
+
+    window.onload = function() {
+      // Cargar progreso guardado en el navegador o iniciar en cero
+      for (let i = 1; i <= totalUnits; i++) {
+        const savedValue = localStorage.getItem('eau_progress_unit_' + i) || "0";
+        document.getElementById('select-' + i).value = savedValue;
+        updateProgressDot(i, savedValue);
+        progressState[i] = parseInt(savedValue);
+      }
+      calculateGlobalProgress();
+    };
+
+    function updateProgress(unitId, value) {
+      localStorage.setItem('eau_progress_unit_' + unitId, value);
+      progressState[unitId] = parseInt(value);
+      updateProgressDot(unitId, value);
+      calculateGlobalProgress();
+    }
+
+    function updateProgressDot(unitId, value) {
+      const dot = document.getElementById('dot-' + unitId);
+      if (value === "0") {
+        dot.className = "status-dot w-2 h-2 rounded-full bg-slate-300"; // Pendiente
+      } else if (value === "1") {
+        dot.className = "status-dot w-2 h-2 rounded-full bg-amber-500 shadow-sm"; // Estudiado
+      } else if (value === "2") {
+        dot.className = "status-dot w-2 h-2 rounded-full bg-emerald-500 shadow-sm"; // Repasado
+      }
+    }
+
+    function calculateGlobalProgress() {
+      let totalScore = 0;
+      // Estudiado (1) suma 5 puntos, Repasado (2) suma 10 puntos. Máximo 100 puntos totales.
+      for (let i = 1; i <= totalUnits; i++) {
+        const val = progressState[i] || 0;
+        if (val === 1) totalScore += 5;
+        if (val === 2) totalScore += 10;
+      }
+      
+      const percentage = Math.min(100, totalScore);
+      document.getElementById('globalProgressBar').style.width = percentage + "%";
+      document.getElementById('globalProgressText').innerText = percentage + "%";
+    }
+
+    function resetAllProgress() {
+      if (confirm("¿Estás seguro de que deseas reiniciar el progreso de estudio de todas las unidades?")) {
+        for (let i = 1; i <= totalUnits; i++) {
+          localStorage.removeItem('eau_progress_unit_' + i);
+          document.getElementById('select-' + i).value = "0";
+          updateProgressDot(i, "0");
+          progressState[i] = 0;
+        }
+        calculateGlobalProgress();
+      }
+    }
+
+    // Filtrado interactivo de categorías didácticas
+    function filterCategory(cat) {
+      // Ajustar clases de botones de filtro
+      const buttons = ['all', 'textual', 'gramatica', 'literatura'];
+      buttons.forEach(b => {
+        const btn = document.getElementById('btn-' + b);
+        if (b === cat) {
+          btn.className = "px-3 py-1 text-[11px] font-bold rounded-lg transition border bg-slate-950 text-white border-transparent";
+        } else {
+          btn.className = "px-3 py-1 text-[11px] font-bold rounded-lg transition border bg-white border-slate-200 text-slate-700 hover:bg-slate-50";
+        }
+      });
+
+      // Filtrar tarjetas
+      const cards = document.querySelectorAll('.unit-card');
+      cards.forEach(card => {
+        const cardCat = card.getAttribute('data-category');
+        if (cat === 'all' || cardCat === cat) {
+          card.classList.remove('dimmed');
+        } else {
+          card.classList.add('dimmed');
+        }
+      });
+    }
+  </script>
+</body>
+</html>

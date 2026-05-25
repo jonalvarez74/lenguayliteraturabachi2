@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Organizador Visual EAU - La Coherencia Textual</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts para estilo académico sofisticado -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .serif-title {
+      font-family: 'Cinzel', serif;
+    }
+    .academic-serif {
+      font-family: 'Playfair Display', serif;
+    }
+    /* Estructura DINA4 Apaisada proporcional */
+    .a4-landscape-page {
+      width: 297mm;
+      height: 210mm;
+      max-width: 100%;
+      aspect-ratio: 297 / 210;
+    }
+    @media print {
+      body {
+        background: white;
+        color: black;
+        margin: 0;
+        padding: 0;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .print-fullscreen {
+        width: 297mm !important;
+        height: 210mm !important;
+        border: none !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 8mm !important;
+        page-break-inside: avoid;
+        background: white !important;
+      }
+      @page {
+        size: A4 landscape;
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 transition-colors duration-300 min-h-screen py-6 px-4 flex flex-col items-center">
+
+  <!-- BARRA DE HERRAMIENTAS SUPERIOR (NO IMPRIMIBLE) -->
+  <div class="no-print w-full max-w-6xl mb-4 bg-white/80 backdrop-blur-md border border-slate-200/80 p-4 rounded-xl shadow-sm flex flex-wrap gap-4 items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="p-2 bg-teal-50 rounded-lg text-teal-600">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-lg font-bold text-slate-900 leading-tight">Organizador Visual EAU • La Coherencia</h1>
+        <p class="text-xs text-slate-500">Esquema compositivo, jerarquía de ideas y progresión temática (Decreto 76/2023)</p>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-3">
+      <!-- Selector de simulación de estructuras -->
+      <div class="flex items-center gap-2">
+        <label for="structureSelect" class="text-xs font-semibold text-slate-600">Esquema Compositivo:</label>
+        <select id="structureSelect" onchange="highlightStructure()" class="px-3 py-1.5 border border-slate-300 rounded-lg text-xs font-medium focus:ring-2 focus:ring-teal-500 outline-none">
+          <option value="none">Seleccionar...</option>
+          <option value="analizante">Deductivo (Analizante)</option>
+          <option value="sintetizante">Inductivo (Sintetizante)</option>
+          <option value="encuadrada">Circular (Encuadrado)</option>
+          <option value="paralela">Paralelo</option>
+        </select>
+      </div>
+
+      <!-- Modo Ficha Activa -->
+      <button id="toggleModeBtn" onclick="toggleEditMode()" class="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg font-medium text-sm hover:bg-slate-50 flex items-center gap-2 transition">
+        <span id="modeIcon">🔓</span>
+        <span id="modeText">Modo Ejercicio</span>
+      </button>
+
+      <!-- Botón Imprimir -->
+      <button onclick="window.print()" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg font-semibold text-sm flex items-center gap-2 transition shadow-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+        </svg>
+        Descargar en PDF / Imprimir
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTENEDOR DINA4 APAISADO -->
+  <div id="canvas" class="print-fullscreen a4-landscape-page bg-white text-slate-800 shadow-2xl rounded-2xl border border-slate-300 overflow-hidden flex flex-col p-8 transition-transform duration-300 relative justify-between">
+    
+    <!-- ENCABEZADO DE LA HOJA -->
+    <header class="border-b-2 border-teal-900/10 pb-4 mb-4 flex justify-between items-end">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-widest text-teal-700 bg-teal-50 px-2 py-1 rounded">EAU • Propiedades del Texto (Coherencia)</span>
+        <h2 class="serif-title text-2xl font-bold text-slate-900 mt-1">El Texto como Unidad de Sentido</h2>
+      </div>
+      <div class="text-right">
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Metodología de Comentario</p>
+        <p class="academic-serif italic text-sm text-teal-900">Tema, Resumen y Esquema Compositivo</p>
+      </div>
+    </header>
+
+    <!-- CUADRÍCULA DE COLUMNAS (3 Bloques de Contenido) -->
+    <main class="grid grid-cols-3 gap-5 flex-grow content-start">
+      
+      <!-- COLUMNA 1: LOS NIVELES DE ANÁLISIS DE LA COHERENCIA -->
+      <section class="flex flex-col gap-4 border-r border-dashed border-slate-200 pr-3">
+        <!-- Tarjeta: Tareas fundamentales -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 hover:border-teal-200 transition">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-6 h-6 flex items-center justify-center bg-teal-600 text-white rounded-full text-xs font-bold">1</span>
+            <h3 class="text-sm font-bold uppercase text-slate-900 tracking-wider">Tareas de Análisis</h3>
+          </div>
+          <p class="text-xs text-slate-500 mb-2">La coherencia determina la estructura profunda y la inteligibilidad del texto en tres planos:</p>
+          <div class="space-y-2 text-xs">
+            <div class="p-2 bg-white rounded border border-slate-150">
+              <span class="font-bold text-teal-800">El Tema:</span> Núcleo de información fundamental + intención del autor (máx. 10 palabras).
+            </div>
+            <div class="p-2 bg-white rounded border border-slate-150">
+              <span class="font-bold text-teal-800">El Resumen:</span> Redacción objetiva con tus propias palabras (paráfrasis, 8-10 líneas).
+            </div>
+            <div class="p-2 bg-white rounded border border-slate-150">
+              <span class="font-bold text-teal-800">Esquema Organizativo:</span> Jerarquización de ideas y estructuración del discurso.
+            </div>
+          </div>
+        </div>
+
+        <!-- Tarjeta: Requisitos de Redacción de la EAU -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 hover:border-teal-200 transition">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-6 h-6 flex items-center justify-center bg-teal-600 text-white rounded-full text-xs font-bold">2</span>
+            <h3 class="text-sm font-bold uppercase text-slate-900 tracking-wider font-semibold">Reglas de Síntesis</h3>
+          </div>
+          <div class="text-[11px] text-slate-600 leading-normal space-y-1">
+            <p><strong>Para el Tema:</strong> Sintetizar en un solo enunciado sin verbos conjugados de acción directa (fórmula nominal).</p>
+            <p><strong>Para el Resumen:</strong></p>
+            <ul class="list-disc pl-4 text-slate-500 space-y-0.5">
+              <li>Único párrafo de cohesión fluida.</li>
+              <li>Sin marcadores de atribución: <em>"El autor dice..."</em>.</li>
+              <li>Omitir ejemplos, cifras puntuales o diálogos.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLUMNA 2: JERARQUÍA DE IDEAS Y ESQUEMA ORGANIZATIVO -->
+      <section class="flex flex-col gap-4 border-r border-dashed border-slate-200 px-1">
+        <!-- El Entramado de Ideas -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 hover:border-teal-200 transition">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-6 h-6 flex items-center justify-center bg-teal-600 text-white rounded-full text-xs font-bold">3</span>
+            <h3 class="text-sm font-bold uppercase text-slate-900 tracking-wider">Jerarquía Textual</h3>
+          </div>
+          <div class="space-y-2 text-xs">
+            <div class="p-2 bg-teal-50/40 rounded border border-teal-100/60">
+              <span class="font-bold text-slate-900">La Tesis (Eje Central):</span>
+              <p class="text-slate-600 text-[11px] mt-0.5">Idea principal que condensa la opinión o postura que el autor defiende o pretende demostrar.</p>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-[10px]">
+              <div class="bg-white p-2 rounded border border-slate-150">
+                <span class="font-bold text-teal-800">Ideas Principales</span>
+                <p class="text-slate-500">Núcleos lógicos que estructuran cada párrafo y sostienen de forma autónoma el sentido general.</p>
+              </div>
+              <div class="bg-white p-2 rounded border border-slate-150">
+                <span class="font-bold text-teal-800">Ideas Secundarias</span>
+                <p class="text-slate-500">Datos, aclaraciones, ejemplos e incisos que amplían y matizan las ideas de mayor rango.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Estructura Expositiva-Argumentativa Clásica -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 hover:border-teal-200 transition">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-6 h-6 flex items-center justify-center bg-teal-600 text-white rounded-full text-xs font-bold">4</span>
+            <h3 class="text-sm font-bold uppercase text-slate-900 tracking-wider">Partes Constitutivas</h3>
+          </div>
+          <div class="grid grid-cols-3 gap-1.5 text-center text-[10px] uppercase font-bold text-teal-950">
+            <div class="bg-teal-50 border border-teal-200 p-2 rounded">
+              Introducción
+              <span class="block text-[8px] font-normal text-slate-500 mt-1 capitalize">Presentación y encuadre</span>
+            </div>
+            <div class="bg-teal-50 border border-teal-200 p-2 rounded">
+              Cuerpo Arg.
+              <span class="block text-[8px] font-normal text-slate-500 mt-1 capitalize">Argumentos y premisas</span>
+            </div>
+            <div class="bg-teal-50 border border-teal-200 p-2 rounded">
+              Conclusión
+              <span class="block text-[8px] font-normal text-slate-500 mt-1 capitalize">Tesis final o síntesis</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLUMNA 3: ESQUEMAS COMPOSITIVOS Y PROGRESIÓN TEMÁTICA -->
+      <section class="flex flex-col gap-4 pl-3">
+        <!-- Esquemas Compositivos (Ubicación de la Tesis) -->
+        <div id="esquemasBox" class="bg-slate-50 p-4 rounded-xl border border-slate-200 hover:border-teal-200 transition">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-6 h-6 flex items-center justify-center bg-teal-600 text-white rounded-full text-xs font-bold">5</span>
+            <h3 class="text-sm font-bold uppercase text-slate-900 tracking-wider">Modelos de Estructura</h3>
+          </div>
+          <div class="space-y-1.5 text-xs">
+            <div id="str-analizante" class="p-1 px-2 rounded border border-transparent transition-all">
+              <span class="font-bold text-slate-800">Deductiva (Analizante):</span> 
+              <span class="text-[10px] text-slate-500 block">La tesis se expone al principio y luego se argumenta o desarrolla.</span>
+            </div>
+            <div id="str-sintetizante" class="p-1 px-2 rounded border border-transparent transition-all">
+              <span class="font-bold text-slate-800">Inductiva (Sintetizante):</span> 
+              <span class="text-[10px] text-slate-500 block">Se exponen hechos/argumentos y la tesis se deduce al final.</span>
+            </div>
+            <div id="str-encuadrada" class="p-1 px-2 rounded border border-transparent transition-all">
+              <span class="font-bold text-slate-800">Circular (Encuadrada):</span> 
+              <span class="text-[10px] text-slate-500 block">Tesis inicial, desarrollo intermedio y reafirmación de la tesis al cierre.</span>
+            </div>
+            <div id="str-paralela" class="p-1 px-2 rounded border border-transparent transition-all">
+              <span class="font-bold text-slate-800">Paralela:</span> 
+              <span class="text-[10px] text-slate-500 block">Se suceden varias ideas o tesis de rango similar sin jerarquía evidente.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hilo Conductor y Progresión Temática -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 hover:border-teal-200 transition">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-6 h-6 flex items-center justify-center bg-teal-600 text-white rounded-full text-xs font-bold">6</span>
+            <h3 class="text-sm font-bold uppercase text-slate-900 tracking-wider">El Hilo Conductor</h3>
+          </div>
+          <div class="text-xs text-slate-600 leading-snug space-y-2">
+            <p><strong>Mecanismo de Progresión:</strong> Dosificación de la información a través del equilibrio entre:</p>
+            <div class="flex gap-2 text-center text-[10px]">
+              <div class="bg-white border border-slate-150 p-1.5 rounded flex-1">
+                <span class="font-bold text-teal-800 block">Tema</span>
+                Información conocida o de partida.
+              </div>
+              <div class="bg-white border border-slate-150 p-1.5 rounded flex-1">
+                <span class="font-bold text-teal-800 block">Rema</span>
+                Información nueva aportada al discurso.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- PIE DE HOJA: IMPORTANCIA DE LA CONEXIÓN LÓGICA -->
+    <footer class="mt-4 bg-teal-900 text-white p-4 rounded-xl flex items-center justify-between shadow-inner">
+      <div class="flex items-center gap-3">
+        <span class="text-2xl">⚡</span>
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-teal-200">Requisito de Evaluación (EAU)</h4>
+          <p class="text-[11px] text-teal-50 leading-tight">Al analizar el esquema organizativo de un texto no basta con delimitar las partes (líneas y párrafos); se debe justificar **qué función lógica cumple cada idea** en el entramado.</p>
+        </div>
+      </div>
+      <div class="text-[10px] font-bold text-teal-200 bg-teal-950 px-3 py-1.5 rounded-lg border border-teal-800">
+        DELIMITAR + COMENTAR LA RELACIÓN
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- SECCIÓN DE NOTAS Y HERRAMIENTAS ADICIONALES (NO IMPRIMIBLE) -->
+  <div class="no-print w-full max-w-6xl mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- El Comentario del Esquema Organizativo: Guión Práctico -->
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+      <h3 class="text-sm font-bold uppercase text-teal-900 mb-3 tracking-wide flex items-center gap-2">
+        <span>📝</span> Plantilla de Redacción EAU para el Esquema
+      </h3>
+      <div class="p-3 bg-slate-50 rounded-lg text-xs font-mono text-slate-700 leading-relaxed space-y-1" contenteditable="true">
+        El texto presenta un esquema compositivo de carácter <strong>[deductivo/inductivo/encuadrado]</strong>, puesto que la tesis se formula al <strong>[inicio/final]</strong> del texto (<em>"..."</em>). Dicha idea se fundamenta sobre un cuerpo argumentativo estructurado en tres bloques: en primer lugar, se expone un argumento de <strong>[autoridad/datos]</strong> (líneas X-Y) con el fin de introducir...
+      </div>
+    </div>
+
+    <!-- Criterios de Evaluación EAU -->
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+      <h3 class="text-sm font-bold uppercase text-teal-900 mb-3 tracking-wide flex items-center gap-2">
+        <span>🎯</span> Errores Frecuentes a Evitar (Penalizaciones de Corrección)
+      </h3>
+      <ul class="text-xs text-slate-600 space-y-2">
+        <li class="flex items-start gap-2 text-red-600">
+          <span class="font-bold">❌</span>
+          <span><strong>Resumen fragmentado:</strong> Redactar con guiones o esquemas en vez de prosa unificada de un único párrafo.</span>
+        </li>
+        <li class="flex items-start gap-2 text-red-600">
+          <span class="font-bold">❌</span>
+          <span><strong>Inexactitud en la Tesis:</strong> Confundir la tesis con el tema del texto (la tesis es la postura, el tema es el asunto).</span>
+        </li>
+        <li class="flex items-start gap-2 text-red-600">
+          <span class="font-bold">❌</span>
+          <span><strong>Simple parcelación de líneas:</strong> Enumerar párrafos sin explicar la progresión o relación entre las ideas expuestas.</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    let isEditMode = false;
+    const initialContent = {};
+
+    window.onload = function() {
+      const editables = document.querySelectorAll('[contenteditable="true"]');
+      editables.forEach((el, index) => {
+        initialContent[index] = el.innerHTML;
+      });
+    };
+
+    function highlightStructure() {
+      const select = document.getElementById('structureSelect');
+      const val = select.value;
+      
+      // Reset de estilos de fondo
+      const ids = ['str-analizante', 'str-sintetizante', 'str-encuadrada', 'str-paralela'];
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        el.className = "p-1 px-2 rounded border border-transparent transition-all";
+      });
+
+      // Iluminar el seleccionado
+      if (val !== 'none') {
+        const target = document.getElementById('str-' + val);
+        if (target) {
+          target.className = "p-1 px-2 rounded border border-teal-400 bg-teal-50/70 font-semibold scale-[1.02] shadow-sm";
+        }
+      }
+    }
+
+    function toggleEditMode() {
+      isEditMode = !isEditMode;
+      const editableBoxes = document.querySelectorAll('[contenteditable="true"]');
+      const textBtn = document.getElementById('modeText');
+      const iconBtn = document.getElementById('modeIcon');
+      
+      if (isEditMode) {
+        textBtn.innerText = "Modo Informativo / Reiniciar";
+        iconBtn.innerText = "🔒";
+        
+        editableBoxes.forEach(el => {
+          el.classList.add('bg-amber-50', 'border-amber-300');
+          el.innerText = "[EJERCICIO PRÁCTICO: Redacta aquí el esquema organizativo del texto que vas a evaluar en clase hoy. Delimita la tesis, ideas principales y el modelo estructural de manera argumentada]";
+        });
+      } else {
+        textBtn.innerText = "Modo Ejercicio";
+        iconBtn.innerText = "🔓";
+        
+        editableBoxes.forEach((el, index) => {
+          el.classList.remove('bg-amber-50', 'border-amber-300');
+          el.innerHTML = initialContent[index];
+        });
+      }
+    }
+  </script>
+</body>
+</html>

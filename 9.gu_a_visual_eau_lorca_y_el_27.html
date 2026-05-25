@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Organizador Visual EAU - Federico García Lorca y la Generación del 27</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts de perfil académico, literario y dramático -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght=0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .serif-title {
+      font-family: 'Cinzel', serif;
+    }
+    .academic-serif {
+      font-family: 'Playfair Display', serif;
+    }
+    /* Estructura proporcional DINA4 Apaisado */
+    .a4-landscape-page {
+      width: 297mm;
+      height: 210mm;
+      max-width: 100%;
+      aspect-ratio: 297 / 210;
+    }
+    @media print {
+      body {
+        background: white;
+        color: black;
+        margin: 0;
+        padding: 0;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .print-fullscreen {
+        width: 297mm !important;
+        height: 210mm !important;
+        border: none !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 8mm !important;
+        page-break-inside: avoid;
+        background: white !important;
+      }
+      @page {
+        size: A4 landscape;
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body class="bg-stone-100 text-stone-900 transition-colors duration-300 min-h-screen py-6 px-4 flex flex-col items-center">
+
+  <!-- BARRA DE HERRAMIENTAS SUPERIOR (NO IMPRIMIBLE) -->
+  <div class="no-print w-full max-w-6xl mb-4 bg-white/80 backdrop-blur-md border border-stone-200 p-4 rounded-xl shadow-sm flex flex-wrap gap-4 items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="p-2 bg-rose-50 rounded-lg text-rose-800 border border-rose-100">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-lg font-bold text-stone-950 leading-tight">Organizador Visual EAU • Literatura</h1>
+        <p class="text-xs text-stone-500 font-medium">La Generación del 27 y Federico García Lorca en el marco del Decreto 76/2023 (EAU - CAPV)</p>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-3">
+      <!-- Selector de Símbolos Lorquianos -->
+      <div class="flex items-center gap-2">
+        <label for="symbolSelector" class="text-xs font-semibold text-stone-600">Simbología Lorquiana:</label>
+        <select id="symbolSelector" onchange="analyzeSymbol()" class="px-3 py-1.5 border border-stone-300 rounded-lg text-xs font-medium focus:ring-2 focus:ring-rose-700 outline-none">
+          <option value="default">Seleccionar símbolo de examen...</option>
+          <option value="baston">El Bastón de Mando</option>
+          <option value="verde">El Vestido Verde</option>
+          <option value="caballo">El Caballo Garañón</option>
+          <option value="agua">El Agua (Corriente vs. Estancada)</option>
+          <option value="luna">La Luna y la Esterilidad</option>
+          <option value="sangre">La Sangre y el Destino</option>
+        </select>
+      </div>
+
+      <!-- Modo Ejercicio -->
+      <button id="toggleModeBtn" onclick="toggleEditMode()" class="px-4 py-2 border border-stone-300 text-stone-700 rounded-lg font-medium text-sm hover:bg-stone-50 flex items-center gap-2 transition">
+        <span id="modeIcon">🔓</span>
+        <span id="modeText">Modo Ejercicio</span>
+      </button>
+
+      <!-- Botón Imprimir -->
+      <button onclick="window.print()" class="px-4 py-2 bg-rose-900 hover:bg-rose-950 text-white rounded-lg font-semibold text-sm flex items-center gap-2 transition shadow-sm border border-rose-950">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+        </svg>
+        Descargar en PDF / Imprimir
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTENEDOR DINA4 APAISADO -->
+  <div id="canvas" class="print-fullscreen a4-landscape-page bg-white text-stone-800 shadow-2xl rounded-2xl border border-stone-300 overflow-hidden flex flex-col p-8 transition-transform duration-300 relative justify-between">
+    
+    <!-- ENCABEZADO DE LA HOJA -->
+    <header class="border-b-2 border-rose-950/10 pb-3 mb-3 flex justify-between items-end">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-widest text-rose-800 bg-rose-50 px-2 py-1 rounded border border-rose-100">EAU • Educación Literaria (G. 27 y Lorca)</span>
+        <h2 class="serif-title text-2xl font-bold text-stone-900 mt-1">Federico García Lorca y el Grupo del 27</h2>
+      </div>
+      <div class="text-right">
+        <p class="text-xs font-semibold text-stone-500 uppercase tracking-wider">Metodología de Comentario</p>
+        <p class="academic-serif italic text-sm text-rose-900">Tradición y Vanguardia: De la Lírica al Drama Social</p>
+      </div>
+    </header>
+
+    <!-- CUADRÍCULA DE COLUMNAS (3 Bloques de Contenido) -->
+    <main class="grid grid-cols-3 gap-5 flex-grow content-start">
+      
+      <!-- COLUMNA 1: LA GENERACIÓN DEL 27 -->
+      <section class="flex flex-col gap-3 border-r border-dashed border-stone-200 pr-3">
+        <div class="bg-stone-50 p-3 rounded-xl border border-stone-200 hover:border-rose-200 transition">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-5 h-5 flex items-center justify-center bg-rose-900 text-white rounded-full text-[10px] font-bold">1</span>
+            <h3 class="text-xs font-bold uppercase text-stone-950 tracking-wider">La Generación del 27</h3>
+          </div>
+          <p class="text-[10px] text-stone-500 mb-1.5 leading-tight">La Edad de Plata de la lírica: síntesis indisoluble entre el canon clásico y la ruptura vanguardista.</p>
+          
+          <div class="space-y-1.5 text-xs">
+            <div class="p-1.5 bg-white rounded border border-stone-150">
+              <span class="font-bold text-rose-950 block">Tradición y Vanguardia:</span>
+              <p class="text-[10px] text-stone-600 leading-tight">Coexistencia del romance y el soneto con el verso libre y el surrealismo. Influencia de Góngora, Bécquer y la lírica popular.</p>
+            </div>
+            
+            <div class="p-1.5 bg-white rounded border border-stone-150">
+              <span class="font-bold text-rose-950 block">"Las Sinsombrero":</span>
+              <p class="text-[10px] text-stone-600 leading-tight">Reivindicación de las creadoras (Rosa Chacel, María Zambrano, Carmen Conde) que aportaron actitudes transgresoras y compromiso intelectual.</p>
+            </div>
+
+            <div class="p-1.5 bg-white rounded border border-stone-150">
+              <span class="font-bold text-rose-950 block">Evolución Estética:</span>
+              <p class="text-[10px] text-stone-600 leading-tight">Tránsito desde la <strong>poesía pura</strong> (deshumanizada y formalista) hacia la <strong>rehumanización surrealista</strong> y el compromiso social de preguerra.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLUMNA 2: FEDERICO GARCÍA LORCA (POESÍA Y ESTILO) -->
+      <section class="flex flex-col gap-3 border-r border-dashed border-stone-200 px-1">
+        <div class="bg-stone-50 p-3 rounded-xl border border-stone-200 hover:border-rose-200 transition flex-grow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-5 h-5 flex items-center justify-center bg-rose-900 text-white rounded-full text-[10px] font-bold">2</span>
+              <h3 class="text-xs font-bold uppercase text-stone-950 tracking-wider">Lorca: El Universo Poético</h3>
+            </div>
+            <p class="text-[10px] text-stone-500 mb-1.5 leading-tight">Fusión magistral del folklore andaluz, el mito gitano y el dolor cósmico contemporáneo:</p>
+            
+            <div class="space-y-1.5 text-xs">
+              <!-- Romancero Gitano -->
+              <div class="bg-white p-2 rounded border border-stone-150">
+                <span class="font-bold text-rose-950 block">1. Romancero Gitano (1928):</span>
+                <p class="text-[10px] text-stone-600 leading-tight">El gitano encarna el instinto libre frente a la civilización y la opresión. Temas del destino trágico, la marginación y la frustración vital.</p>
+              </div>
+
+              <!-- Poeta en Nueva York -->
+              <div class="bg-white p-2 rounded border border-stone-150">
+                <span class="font-bold text-rose-950 block">2. Poeta en Nueva York (1930):</span>
+                <p class="text-[10px] text-stone-600 leading-tight">Grito de denuncia contra la urbe deshumanizada, el capitalismo insolidario, la alienación y la marginación de la minoría afroamericana.</p>
+              </div>
+
+              <!-- Estilo Lorquiano -->
+              <div class="bg-white p-2 rounded border border-stone-150">
+                <span class="font-bold text-rose-950 block">Mecanismos Estilísticos:</span>
+                <p class="text-[10px] text-stone-600 leading-tight">La <strong>metáfora audaz</strong> y la imagen onírica surrealista que asocia planos distantes para expresar angustia existencial y deseo frustrado.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLUMNA 3: LA CASA DE BERNARDA ALBA (1936) -->
+      <section class="flex flex-col gap-3 pl-3">
+        <div class="bg-stone-50 p-3 rounded-xl border border-stone-200 hover:border-rose-200 transition flex-grow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-5 h-5 flex items-center justify-center bg-rose-900 text-white rounded-full text-[10px] font-bold">3</span>
+              <h3 class="text-xs font-bold uppercase text-stone-950 tracking-wider">Teatro: Bernarda Alba</h3>
+            </div>
+            <p class="text-[10px] text-stone-500 mb-1.5 leading-tight">Obra cumbre de su teatro. Definida por Lorca como un *"documental fotográfico"* en blanco y negro:</p>
+            
+            <div class="space-y-1.5 text-xs">
+              <!-- Conflicto Central -->
+              <div class="bg-white p-2 rounded border border-stone-150">
+                <span class="font-bold text-rose-950 block">El Gran Conflicto Trágico:</span>
+                <p class="text-[10px] text-stone-600 leading-tight"><strong>Autoridad</strong> (Bernarda: represión de impulsos, sumisión, luto asfixiante y tiranía) frente a <strong>Libertad</strong> (Adela: instinto, vitalidad y transgresión).</p>
+              </div>
+
+              <!-- Rol de Personajes -->
+              <div class="bg-white p-2 rounded border border-stone-150">
+                <span class="font-bold text-rose-950 block">Roles Dramáticos Clave:</span>
+                <p class="text-[10px] text-stone-600 leading-tight"><strong>Poncia:</strong> Sabiduría popular y realismo intermedio. <br><strong>María Josefa:</strong> La locura que proclama la verdad poética de la libertad. <br><strong>Pepe el Romano:</strong> El catalizador del conflicto que nunca entra en escena.</p>
+              </div>
+
+              <!-- Temas Secundarios -->
+              <div class="bg-white p-2 rounded border border-stone-150">
+                <span class="font-bold text-rose-950 block">Temática Adyacente:</span>
+                <p class="text-[10px] text-stone-600 leading-tight">La marginación social de la mujer en la España rural, el peso asfixiante del "qué dirán" (hipocresía social) y la envidia entre hermanas.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ÁREA COMPLEMENTARIA: DESGLOSADOR ACTIVO DE SÍMBOLOS LORQUIANOS (PREMIUM WIDGET) -->
+    <div id="dynamicAnalyzer" class="bg-rose-50/50 border border-rose-150 p-3 rounded-xl">
+      <div class="flex justify-between items-center mb-1.5">
+        <h4 class="text-xs font-bold text-rose-950 uppercase tracking-wider flex items-center gap-1.5">
+          <span>🌙</span> Descodificador de Símbolos de Lorca (Criterio Fundamental de la EAU)
+        </h4>
+        <span id="analyzerSymbolType" class="text-[10px] font-bold text-rose-900 bg-white px-2 py-0.5 rounded border border-rose-200">
+          Esperando selección...
+        </span>
+      </div>
+      
+      <!-- Bloques de análisis crítico visual -->
+      <div id="segmentsWrapper" class="grid grid-cols-4 gap-2 min-h-[52px] bg-white border border-stone-200 rounded-lg p-2 text-center items-stretch">
+        <span class="text-xs text-stone-400 italic col-span-4 self-center">Selecciona un símbolo en el menú superior para desplegar su ficha de análisis crítico según los requerimientos de la EAU del País Vasco.</span>
+      </div>
+    </div>
+
+    <!-- PIE DE HOJA: CRITERIO DE EVALUACIÓN INEXCUSABLE -->
+    <footer class="mt-2 bg-stone-950 text-white p-3 rounded-xl flex items-center justify-between shadow-inner">
+      <div class="flex items-center gap-3">
+        <span class="text-xl">⚡</span>
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-rose-300">Criterio Inexcusable de Corrección de la EAU (UPV/EHU)</h4>
+          <p class="text-[10px] text-stone-300 leading-tight">Para la calificación máxima, el examen debe articular la relación entre la **simbología de Lorca**, la **estructura formal de la obra** y las fuerzas de **represión o libertad** representadas.</p>
+        </div>
+      </div>
+      <div class="text-[9px] font-bold text-rose-300 bg-stone-900 px-2.5 py-1.5 rounded-lg border border-stone-800 shrink-0">
+        SÍMBOLO + CONFLICTO + JUSTIFICACIÓN
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- SECCIÓN DE NOTAS Y HERRAMIENTAS ADICIONALES (NO IMPRIMIBLE) -->
+  <div class="no-print w-full max-w-6xl mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Guía de Redacción para Examen -->
+    <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
+      <h3 class="text-sm font-bold uppercase text-stone-900 mb-3 tracking-wide flex items-center gap-2">
+        <span>📝</span> Plantilla de Redacción Crítica EAU (Lorca)
+      </h3>
+      <div class="p-3 bg-slate-50 rounded-lg text-xs font-mono text-stone-700 leading-relaxed space-y-1" contenteditable="true">
+        En el fragmento propuesto de <strong>La casa de Bernarda Alba</strong> se evidencia el conflicto central de la obra entre <strong>[Autoridad / Libertad]</strong>, personificado respectivamente en la figura tiránica de Bernarda y la rebelión instintiva de <strong>[Adela]</strong>. Este enfrentamiento se ve reforzado estilísticamente por el uso del símbolo de <strong>[mencionar símbolo: el bastón, el vestido verde, el agua estancada]</strong>, que representa <strong>[explicar el significado del símbolo]</strong> y anticipa el fatal desenlace trágico que caracteriza la obra lorquiana.
+      </div>
+    </div>
+
+    <!-- Criterios de Evaluación y Checklist -->
+    <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
+      <h3 class="text-sm font-bold uppercase text-stone-900 mb-3 tracking-wide flex items-center gap-2">
+        <span>🎯</span> Checklist del Examen de Literatura (Lorca y el 27)
+      </h3>
+      <ul class="text-xs text-stone-600 space-y-2">
+        <li class="flex items-start gap-2">
+          <input type="checkbox" class="mt-0.5 rounded text-rose-800 focus:ring-rose-500">
+          <span>¿He argumentado la síntesis entre tradición popular y vanguardismo de la Generación del 27?</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <input type="checkbox" class="mt-0.5 rounded text-rose-800 focus:ring-rose-500">
+          <span>¿He contrastado adecuadamente la estética mítica del Romancero Gitano frente a la denuncia surrealista de Poeta en Nueva York?</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <input type="checkbox" class="mt-0.5 rounded text-rose-800 focus:ring-rose-500">
+          <span>¿He vinculado la rebelión final de Adela con la destrucción física del bastón de Bernarda como clímax dramático?</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    let isEditMode = false;
+    const initialContent = {};
+
+    window.onload = function() {
+      const editables = document.querySelectorAll('[contenteditable="true"]');
+      editables.forEach((el, index) => {
+        initialContent[index] = el.innerHTML;
+      });
+    };
+
+    // Base de datos de símbolos para el desglosador interactivo
+    const symbolData = {
+      baston: {
+        type: "El Bastón de Bernarda Alba - Objeto de Autoridad",
+        segments: [
+          { value: "Tiranía y poder ciego", label: "Significado", bg: "bg-rose-100 text-rose-950 border-rose-300" },
+          { value: "Fálico y opresivo", label: "Carga Psicológica", bg: "bg-stone-100 text-stone-900 border-stone-300" },
+          { value: "Bernarda lo golpea contra el suelo para imponer silencio", label: "Uso Escénico", bg: "bg-rose-50 text-rose-900 border-rose-200" },
+          { value: "Adela rompe el bastón de Bernarda en el Acto III, quebrantando su poder", label: "Clímax Dramático", bg: "bg-stone-50 text-stone-800 border-stone-200" }
+        ]
+      },
+      verde: {
+        type: "El Color Verde de Adela - Rebeldía y Naturaleza",
+        segments: [
+          { value: "Rebeldía, vitalidad y deseo sexual", label: "Significado", bg: "bg-emerald-100 text-emerald-950 border-emerald-300" },
+          { value: "Transgresión del luto impuesto", label: "Carga Psicológica", bg: "bg-stone-100 text-stone-900 border-stone-300" },
+          { value: "Adela se pone el vestido verde y se muestra ante las gallinas", label: "Uso Escénico", bg: "bg-emerald-50 text-emerald-900 border-emerald-200" },
+          { value: "Premonición de la muerte (asociado al suicidio final)", label: "Fatalidad Trágica", bg: "bg-stone-50 text-stone-800 border-stone-200" }
+        ]
+      },
+      caballo: {
+        type: "El Caballo Garañón - Impulso Sexual Desatado",
+        segments: [
+          { value: "Pasión masculina desbocada e instinto sexual", label: "Significado", bg: "bg-rose-100 text-rose-950 border-rose-300" },
+          { value: "Pepe el Romano como semental libre", label: "Asociación", bg: "bg-stone-100 text-stone-900 border-stone-300" },
+          { value: "Se oyen los golpes del caballo contra las paredes del corral", label: "Uso Escénico", bg: "bg-rose-50 text-rose-900 border-rose-200" },
+          { value: "Simboliza la tensión sexual que amenaza con derribar los muros", label: "Función", bg: "bg-stone-50 text-stone-800 border-stone-200" }
+        ]
+      },
+      agua: {
+        type: "El Agua - Flujo Vital frente a Parálisis Trágica",
+        segments: [
+          { value: "Río = Libertad y erotismo; Pozo = Muerte y represión", label: "Significado", bg: "bg-blue-100 text-blue-950 border-blue-300" },
+          { value: "Sed física como metáfora del deseo reprimido", label: "Carga Psicológica", bg: "bg-stone-100 text-stone-900 border-stone-300" },
+          { value: "El pueblo no tiene ríos, solo pozos medianeros de agua envenenada", label: "Uso Escénico", bg: "bg-blue-50 text-blue-900 border-blue-200" },
+          { value: "María Josefa y Adela ansían la orilla del mar (libertad infinita)", label: "Anhelo Lírico", bg: "bg-stone-50 text-stone-800 border-stone-200" }
+        ]
+      },
+      luna: {
+        type: "La Luna - El Destino Trágico y la Esterilidad",
+        segments: [
+          { value: "La muerte, el influjo del destino y la esterilidad", label: "Significado", bg: "bg-stone-200 text-stone-950 border-stone-400" },
+          { value: "Ilumina las pasiones ocultas en la noche", label: "Asociación", bg: "bg-stone-100 text-stone-900 border-stone-300" },
+          { value: "Las hijas de Bernarda miran la luna y añoran la noche", label: "Uso Escénico", bg: "bg-stone-50 text-stone-900 border-stone-200" },
+          { value: "Símbolo omnipresente en bodas de sangre y el romancero", label: "Trascendencia", bg: "bg-stone-100 text-stone-800 border-stone-200" }
+        ]
+      },
+      sangre: {
+        type: "La Sangre - La Vida y la Violencia del Destino",
+        segments: [
+          { value: "La pasión desatada, el dolor y la muerte violenta", label: "Significado", bg: "bg-rose-100 text-rose-950 border-rose-300" },
+          { value: "La herencia biológica y de estirpe social", label: "Carga Psicológica", bg: "bg-stone-100 text-stone-900 border-stone-300" },
+          { value: "Dramatización del linaje familiar y la honra derramada", label: "Uso Escénico", bg: "bg-rose-50 text-rose-900 border-rose-200" },
+          { value: "Adela afirma su entrega y su sangre ante Martirio", label: "Tensión Acto III", bg: "bg-stone-50 text-stone-800 border-stone-200" }
+        ]
+      }
+    };
+
+    function analyzeSymbol() {
+      const select = document.getElementById('symbolSelector');
+      const val = select.value;
+      const typeContainer = document.getElementById('analyzerSymbolType');
+      const wrapper = document.getElementById('segmentsWrapper');
+
+      if (val === 'default' || !symbolData[val]) {
+        typeContainer.innerText = "Esperando selección...";
+        wrapper.innerHTML = `<span class="text-xs text-stone-400 italic col-span-4 self-center">Selecciona un símbolo en el menú superior para desplegar su ficha de análisis crítico según los requerimientos de la EAU del País Vasco.</span>`;
+        return;
+      }
+
+      const data = symbolData[val];
+      typeContainer.innerText = data.type;
+      wrapper.innerHTML = "";
+
+      data.segments.forEach(seg => {
+        const item = document.createElement('div');
+        item.className = `flex flex-col items-center justify-center p-2 rounded-lg border ${seg.bg} shadow-sm transition-transform hover:scale-[1.02]`;
+        item.innerHTML = `
+          <span class="text-[10px] font-bold uppercase tracking-wider text-stone-500 mb-1 leading-none">${seg.label}</span>
+          <span class="text-xs font-semibold leading-snug">${seg.value}</span>
+        `;
+        wrapper.appendChild(item);
+      });
+    }
+
+    function toggleEditMode() {
+      isEditMode = !isEditMode;
+      const editableBoxes = document.querySelectorAll('[contenteditable="true"]');
+      const textBtn = document.getElementById('modeText');
+      const iconBtn = document.getElementById('modeIcon');
+      
+      if (isEditMode) {
+        textBtn.innerText = "Modo Informativo / Reiniciar";
+        iconBtn.innerText = "🔒";
+        
+        editableBoxes.forEach(el => {
+          el.classList.add('bg-amber-50', 'border-amber-300');
+          el.innerText = "[EJERCICIO DE COMENTARIO: Escribe aquí tu análisis literario sobre el fragmento dramático propuesto. Identifica cuál es el conflicto fundamental de las fuerzas escénicas, qué simbología se percibe en las acotaciones del autor y cómo se resuelve la tensión dramática de la escena]";
+        });
+      } else {
+        textBtn.innerText = "Modo Ejercicio";
+        iconBtn.innerText = "🔓";
+        
+        editableBoxes.forEach((el, index) => {
+          el.classList.remove('bg-amber-50', 'border-amber-300');
+          el.innerHTML = initialContent[index];
+        });
+      }
+    }
+  </script>
+</body>
+</html>

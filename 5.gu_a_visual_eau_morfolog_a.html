@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Organizador Visual EAU - La Morfología de la Palabra</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts de perfil académico y editorial -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .serif-title {
+      font-family: 'Cinzel', serif;
+    }
+    .academic-serif {
+      font-family: 'Playfair Display', serif;
+    }
+    /* Estructura proporcional DINA4 Apaisado */
+    .a4-landscape-page {
+      width: 297mm;
+      height: 210mm;
+      max-width: 100%;
+      aspect-ratio: 297 / 210;
+    }
+    @media print {
+      body {
+        background: white;
+        color: black;
+        margin: 0;
+        padding: 0;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .print-fullscreen {
+        width: 297mm !important;
+        height: 210mm !important;
+        border: none !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 8mm !important;
+        page-break-inside: avoid;
+        background: white !important;
+      }
+      @page {
+        size: A4 landscape;
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 transition-colors duration-300 min-h-screen py-6 px-4 flex flex-col items-center">
+
+  <!-- BARRA DE HERRAMIENTAS SUPERIOR (NO IMPRIMIBLE) -->
+  <div class="no-print w-full max-w-6xl mb-4 bg-white/80 backdrop-blur-md border border-slate-200/80 p-4 rounded-xl shadow-sm flex flex-wrap gap-4 items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="p-2 bg-rose-50 rounded-lg text-rose-600">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-lg font-bold text-slate-900 leading-tight">Organizador Visual EAU • Morfología</h1>
+        <p class="text-xs text-slate-500">Estructura y formación de palabras según la NGLE y el GTG (Decreto 76/2023)</p>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-3">
+      <!-- Simulador de Segmentación de Palabras -->
+      <div class="flex items-center gap-2">
+        <label for="wordSelector" class="text-xs font-semibold text-slate-600">Analizador Práctico:</label>
+        <select id="wordSelector" onchange="analyzeWord()" class="px-3 py-1.5 border border-slate-300 rounded-lg text-xs font-medium focus:ring-2 focus:ring-rose-500 outline-none">
+          <option value="default">Seleccionar ejemplo de examen...</option>
+          <option value="envejecer">envejecer</option>
+          <option value="cantábamos">cantábamos</option>
+          <option value="descafeinado">descafeinado</option>
+          <option value="reorganización">reorganización</option>
+          <option value="paragüero">paragüero</option>
+        </select>
+      </div>
+
+      <!-- Modo Ejercicio -->
+      <button id="toggleModeBtn" onclick="toggleEditMode()" class="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg font-medium text-sm hover:bg-slate-50 flex items-center gap-2 transition">
+        <span id="modeIcon">🔓</span>
+        <span id="modeText">Modo Ejercicio</span>
+      </button>
+
+      <!-- Botón Imprimir -->
+      <button onclick="window.print()" class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-lg font-semibold text-sm flex items-center gap-2 transition shadow-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+        </svg>
+        Descargar en PDF / Imprimir
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTENEDOR DINA4 APAISADO -->
+  <div id="canvas" class="print-fullscreen a4-landscape-page bg-white text-slate-800 shadow-2xl rounded-2xl border border-slate-300 overflow-hidden flex flex-col p-8 transition-transform duration-300 relative justify-between">
+    
+    <!-- ENCABEZADO DE LA HOJA -->
+    <header class="border-b-2 border-rose-900/10 pb-4 mb-3 flex justify-between items-end">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-widest text-rose-700 bg-rose-50 px-2 py-1 rounded">EAU • Conocimiento de la Lengua (Morfología)</span>
+        <h2 class="serif-title text-2xl font-bold text-slate-900 mt-1">Estructura Interna y Formación Léxica</h2>
+      </div>
+      <div class="text-right">
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Metodología de Comentario</p>
+        <p class="academic-serif italic text-sm text-rose-900">Análisis Segmental según criterios de la NGLE</p>
+      </div>
+    </header>
+
+    <!-- CUADRÍCULA DE COLUMNAS (3 Bloques de Contenido) -->
+    <main class="grid grid-cols-3 gap-5 flex-grow content-start">
+      
+      <!-- COLUMNA 1: LA UNIDAD BÁSICA (EL MORFEMA) -->
+      <section class="flex flex-col gap-3 border-r border-dashed border-slate-200 pr-3">
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 hover:border-rose-200 transition">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-5 h-5 flex items-center justify-center bg-rose-600 text-white rounded-full text-[10px] font-bold">1</span>
+            <h3 class="text-xs font-bold uppercase text-slate-900 tracking-wider">Mecanismos Segmentales</h3>
+          </div>
+          <p class="text-[10px] text-slate-500 mb-2 leading-tight">Las unidades mínimas con significado que componen la palabra:</p>
+          
+          <div class="space-y-1.5 text-xs">
+            <div class="p-2 bg-white rounded border border-slate-150">
+              <span class="font-bold text-rose-950 block">Raíz o Lexema:</span>
+              <p class="text-[10px] text-slate-600">Aporta el significado léxico básico y común a toda su familia léxica.</p>
+            </div>
+            
+            <div class="p-2 bg-white rounded border border-slate-150">
+              <span class="font-bold text-rose-950 block">Morfemas Derivativos (Afijos):</span>
+              <ul class="text-[10px] text-slate-600 space-y-0.5 mt-1">
+                <li>• <strong>Prefijos:</strong> Delante de la raíz. No cambian categoría.</li>
+                <li>• <strong>Sufijos:</strong> Detrás de la raíz. Pueden ser <em>apreciativos</em> (diminutivos, despectivos) o <em>no apreciativos</em> (crean nuevas categorías).</li>
+                <li>• <strong>Interfijos:</strong> Enlaces sin significado entre raíz y sufijo (ej. pec-<strong>ec</strong>-ito).</li>
+              </ul>
+            </div>
+
+            <div class="p-2 bg-white rounded border border-slate-150">
+              <span class="font-bold text-rose-950 block">Morfemas Flexivos (Desinencias):</span>
+              <p class="text-[10px] text-slate-600">Aparecen al final de la palabra. Aportan género y número en nombres/adjetivos; y TAM y PN en formas verbales.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLUMNA 2: CLASIFICACIÓN SEGÚN SU FORMACIÓN (NGLE) -->
+      <section class="flex flex-col gap-3 border-r border-dashed border-slate-200 px-1">
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 hover:border-rose-200 transition flex-grow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-5 h-5 flex items-center justify-center bg-rose-600 text-white rounded-full text-[10px] font-bold">2</span>
+              <h3 class="text-xs font-bold uppercase text-slate-900 tracking-wider">Procedimientos de Creación</h3>
+            </div>
+            <p class="text-[10px] text-slate-500 mb-2 leading-tight">Clasificación morfológica estructural de las palabras:</p>
+            
+            <div class="space-y-1.5 text-xs">
+              <div class="bg-white p-2 rounded border border-slate-150">
+                <span class="font-bold text-rose-950 block">Simples y Derivadas:</span>
+                <p class="text-[10px] text-slate-600"><strong>Simples:</strong> Una sola raíz (+ flexivos). <br><strong>Derivadas:</strong> Una raíz + afijo(s) derivativo(s).</p>
+              </div>
+
+              <div class="bg-white p-2 rounded border border-slate-150">
+                <span class="font-bold text-rose-950 block">Compuestas (Bases léxicas):</span>
+                <p class="text-[10px] text-slate-600">Unión de dos o más raíces o palabras (ej: <em>pelirrojo, sacacorchos</em>).</p>
+              </div>
+
+              <!-- Parasíntesis detallada -->
+              <div class="bg-white p-2 rounded border border-slate-150">
+                <span class="font-bold text-rose-950 block text-[11px]">Parasintéticas (Doble vía):</span>
+                <div class="grid grid-cols-1 gap-1 text-[9px] mt-1">
+                  <div class="bg-rose-50/50 p-1 rounded border border-rose-100">
+                    <span class="font-bold text-rose-800">Tipo 1 (Prefijación + Sufijación):</span> Adición simultánea de prefijo y sufijo. No existen por separado la parte prefijada ni la sufijada (ej: <em>en-veje-cer</em>).
+                  </div>
+                  <div class="bg-rose-50/50 p-1 rounded border border-rose-100">
+                    <span class="font-bold text-rose-800">Tipo 2 (Composición + Sufijación):</span> Unión simultánea de dos raíces y un sufijo (ej: <em>quince-añ-ero</em>).
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLUMNA 3: MORFOLOGÍA VERBAL Y CONCEPTOS CLAVE -->
+      <section class="flex flex-col gap-3 pl-3">
+        <!-- Morfología Verbal -->
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 hover:border-rose-200 transition">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-5 h-5 flex items-center justify-center bg-rose-600 text-white rounded-full text-[10px] font-bold">3</span>
+            <h3 class="text-xs font-bold uppercase text-slate-900 tracking-wider">Morfología Verbal</h3>
+          </div>
+          <div class="space-y-1 text-[11px] text-slate-600">
+            <p><strong>Estructura Segmental del Verbo:</strong></p>
+            <div class="grid grid-cols-4 gap-1 text-[9px] text-center font-bold mt-1">
+              <div class="bg-white p-1 rounded border border-slate-200">Raíz<span class="block font-normal text-slate-500">Signif. léx.</span></div>
+              <div class="bg-white p-1 rounded border border-slate-200">V.T.<span class="block font-normal text-slate-500">Conj.</span></div>
+              <div class="bg-white p-1 rounded border border-slate-200">T.A.M.<span class="block font-normal text-slate-500">Acción</span></div>
+              <div class="bg-white p-1 rounded border border-slate-200">P.N.<span class="block font-normal text-slate-500">Sujeto</span></div>
+            </div>
+            <p class="text-[9px] text-amber-800 bg-amber-50 p-1 rounded border border-amber-100 mt-1">
+              💡 <strong>Segmento Nulo (Ø):</strong> Indica la ausencia física de un morfema flexivo (ej: en <em>cantas</em>, el TAM es Ø).
+            </p>
+          </div>
+        </div>
+
+        <!-- Conceptos Clave GTG -->
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 hover:border-rose-200 transition">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="w-5 h-5 flex items-center justify-center bg-rose-600 text-white rounded-full text-[10px] font-bold">4</span>
+            <h3 class="text-xs font-bold uppercase text-slate-900 tracking-wider">Conceptos Clave GTG</h3>
+          </div>
+          <ul class="text-[10px] text-slate-600 space-y-1.5 pl-1">
+            <li>🏷️ <strong>Base Léxica:</strong> Vocablo original completo de partida en la derivación (ej: de <em>fruta</em> se llega a <em>frutero</em>).</li>
+            <li>🔄 <strong>Alomorfos:</strong> Variaciones en el significante de un morfema sin alterar su significado (ej: prefijo de negación <em>in-, im-, i-</em>).</li>
+            <li>🏛️ <strong>Bases Compositivas Cultas:</strong> Raíces prefijas/sufijas latinas o griegas que crean tecnicismos (ej: <em>cronología, hidro-</em>).</li>
+          </ul>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ÁREA COMPLEMENTARIA: ANALIZADOR DE SEGMENTACIÓN ACTIVO (PREMIUM WIDGET) -->
+    <div id="dynamicAnalyzer" class="bg-rose-50/50 border border-rose-150 p-3 rounded-xl">
+      <div class="flex justify-between items-center mb-1.5">
+        <h4 class="text-xs font-bold text-rose-950 uppercase tracking-wider flex items-center gap-1.5">
+          <span>🔬</span> Analizador Segmental Activo (Simulación de Examen)
+        </h4>
+        <span id="analyzerWordType" class="text-[10px] font-bold text-rose-800 bg-white px-2 py-0.5 rounded border border-rose-200">
+          Esperando selección...
+        </span>
+      </div>
+      
+      <!-- Bloques de segmentación visual -->
+      <div id="segmentsWrapper" class="flex items-center gap-2 min-h-[48px] justify-center bg-white border border-slate-150 rounded-lg p-2">
+        <span class="text-xs text-slate-400 italic">Selecciona una palabra en el menú superior para ver su descomposición morfológica explicada según la NGLE.</span>
+      </div>
+    </div>
+
+    <!-- PIE DE HOJA: CRITERIO DE EVALUACIÓN INEXCUSABLE -->
+    <footer class="mt-3 bg-rose-900 text-white p-3 rounded-xl flex items-center justify-between shadow-inner">
+      <div class="flex items-center gap-3">
+        <span class="text-xl">⚡</span>
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-rose-200">Requisito de Evaluación EAU (UPV/EHU)</h4>
+          <p class="text-[10px] text-rose-50 leading-tight">En la segmentación es obligatorio indicar **exactamente la categoría** de cada afijo y su naturaleza (ej: *prefijo derivativo*, *morfema flexivo de género*).</p>
+        </div>
+      </div>
+      <div class="text-[9px] font-bold text-rose-200 bg-rose-950 px-2.5 py-1.5 rounded-lg border border-rose-800 shrink-0">
+        SEGMENTAR + CLASIFICAR AFILADOS
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- SECCIÓN DE NOTAS Y HERRAMIENTAS ADICIONALES (NO IMPRIMIBLE) -->
+  <div class="no-print w-full max-w-6xl mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Guía de Redacción de Morfología para Examen -->
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+      <h3 class="text-sm font-bold uppercase text-rose-900 mb-3 tracking-wide flex items-center gap-2">
+        <span>📝</span> Plantilla de Análisis de Morfología (EAU)
+      </h3>
+      <div class="p-3 bg-slate-50 rounded-lg text-xs font-mono text-slate-700 leading-relaxed space-y-1" contenteditable="true">
+        La palabra <strong>[palabra]</strong> es un <strong>[sustantivo/adjetivo/verbo]</strong>. Morfológicamente, se segmenta de la siguiente manera: el prefijo derivativo <strong>[prefijo-]</strong>; la raíz o lexema <strong>[-raíz-]</strong> (que presenta el alomorfo [alomorfo] derivado de [base léxica]); el sufijo derivativo <strong>[-sufijo]</strong>; y el morfema flexivo de <strong>[género/número/TAM/PN]</strong> <strong>[-flexivo]</strong>. Según su estructura y formación, se clasifica como una palabra <strong>[simple / derivada / compuesta / parasintética]</strong>.
+      </div>
+    </div>
+
+    <!-- Criterios de Evaluación y Checklist -->
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+      <h3 class="text-sm font-bold uppercase text-rose-900 mb-3 tracking-wide flex items-center gap-2">
+        <span>🎯</span> Checklist del Examen de Morfología
+      </h3>
+      <ul class="text-xs text-slate-600 space-y-2">
+        <li class="flex items-start gap-2">
+          <input type="checkbox" class="mt-0.5 rounded text-rose-600 focus:ring-rose-500">
+          <span>¿He identificado adecuadamente los alomorfos en la raíz y prefijos en caso de existir?</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <input type="checkbox" class="mt-0.5 rounded text-rose-600 focus:ring-rose-500">
+          <span>¿He argumentado adecuadamente por qué una palabra es parasintética explicando la simultaneidad?</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <input type="checkbox" class="mt-0.5 rounded text-rose-600 focus:ring-rose-500">
+          <span>En el caso de los verbos, ¿he detallado por separado la Vocal Temática, el TAM y la desinencia PN?</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    let isEditMode = false;
+    const initialContent = {};
+
+    window.onload = function() {
+      const editables = document.querySelectorAll('[contenteditable="true"]');
+      editables.forEach((el, index) => {
+        initialContent[index] = el.innerHTML;
+      });
+    };
+
+    // Base de datos de palabras para el segmentador interactivo
+    const wordData = {
+      envejecer: {
+        type: "Parasintética (Tipo 1: Prefijación + Sufijación simultáneas)",
+        segments: [
+          { value: "en-", label: "Prefijo derivativo", bg: "bg-rose-100 text-rose-900 border-rose-300" },
+          { value: "vej-", label: "Raíz (Alomorfo de 'viejo')", bg: "bg-amber-100 text-amber-950 border-amber-300" },
+          { value: "-ec-", label: "Sufijo derivativo (Verbalizador)", bg: "bg-blue-100 text-blue-900 border-blue-300" },
+          { value: "-e-", label: "Vocal Temática (2.ª conj.)", bg: "bg-teal-100 text-teal-900 border-teal-300" },
+          { value: "-r", label: "Morf. flexivo desinencial (Infinitivo)", bg: "bg-purple-100 text-purple-900 border-purple-300" }
+        ]
+      },
+      cantábamos: {
+        type: "Simple (Forma Verbal)",
+        segments: [
+          { value: "cant-", label: "Raíz / Lexema", bg: "bg-amber-100 text-amber-950 border-amber-300" },
+          { value: "-a-", label: "Vocal Temática (1.ª conj.)", bg: "bg-teal-100 text-teal-900 border-teal-300" },
+          { value: "-ba-", label: "Morfema flexivo TAM (Pret. Imp. Ind.)", bg: "bg-indigo-100 text-indigo-900 border-indigo-300" },
+          { value: "-mos", label: "Morfema flexivo PN (1.ª pl.)", bg: "bg-purple-100 text-purple-900 border-purple-300" }
+        ]
+      },
+      descafeinado: {
+        type: "Parasintética (Tipo 1: Adición simultánea)",
+        segments: [
+          { value: "des-", label: "Prefijo derivativo", bg: "bg-rose-100 text-rose-900 border-rose-300" },
+          { value: "cafeín-", label: "Raíz (Base léxica 'café')", bg: "bg-amber-100 text-amber-950 border-amber-300" },
+          { value: "-ad-", label: "Sufijo derivativo (Adjetivador)", bg: "bg-blue-100 text-blue-900 border-blue-300" },
+          { value: "-o", label: "Morfema flexivo (Género masculino)", bg: "bg-purple-100 text-purple-900 border-purple-300" }
+        ]
+      },
+      reorganización: {
+        type: "Derivada (Por prefijación y sufijación sucesivas)",
+        segments: [
+          { value: "re-", label: "Prefijo derivativo", bg: "bg-rose-100 text-rose-900 border-rose-300" },
+          { value: "organ-", label: "Raíz", bg: "bg-amber-100 text-amber-950 border-amber-300" },
+          { value: "-iz-", label: "Sufijo derivativo (Verbalizador)", bg: "bg-blue-100 text-blue-900 border-blue-300" },
+          { value: "-ación", label: "Sufijo derivativo (Nominalizador)", bg: "bg-teal-100 text-teal-900 border-teal-300" }
+        ]
+      },
+      paragüero: {
+        type: "Parasintética (Tipo 2: Composición + Sufijación simultáneas)",
+        segments: [
+          { value: "para-", label: "Raíz 1 (Del verbo 'parar')", bg: "bg-amber-100 text-amber-950 border-amber-300" },
+          { value: "-gü-", label: "Raíz 2 (Alomorfo de 'agua')", bg: "bg-amber-100 text-amber-950 border-amber-300" },
+          { value: "-ero", label: "Sufijo derivativo (Oficio / Recipiente)", bg: "bg-blue-100 text-blue-900 border-blue-300" }
+        ]
+      }
+    };
+
+    function analyzeWord() {
+      const select = document.getElementById('wordSelector');
+      const val = select.value;
+      const typeContainer = document.getElementById('analyzerWordType');
+      const wrapper = document.getElementById('segmentsWrapper');
+
+      if (val === 'default' || !wordData[val]) {
+        typeContainer.innerText = "Esperando selección...";
+        wrapper.innerHTML = `<span class="text-xs text-slate-400 italic">Selecciona una palabra en el menú superior para ver su descomposición morfológica explicada según la NGLE.</span>`;
+        return;
+      }
+
+      const data = wordData[val];
+      typeContainer.innerText = data.type;
+      wrapper.innerHTML = "";
+
+      data.segments.forEach(seg => {
+        const item = document.createElement('div');
+        item.className = `flex flex-col items-center p-2 rounded-lg border ${seg.bg} min-w-[70px] text-center shadow-sm transition-transform hover:scale-105`;
+        item.innerHTML = `
+          <span class="text-sm font-bold font-mono">${seg.value}</span>
+          <span class="text-[8px] font-semibold uppercase tracking-tight mt-1 opacity-80 leading-none">${seg.label}</span>
+        `;
+        wrapper.appendChild(item);
+      });
+    }
+
+    function toggleEditMode() {
+      isEditMode = !isEditMode;
+      const editableBoxes = document.querySelectorAll('[contenteditable="true"]');
+      const textBtn = document.getElementById('modeText');
+      const iconBtn = document.getElementById('modeIcon');
+      
+      if (isEditMode) {
+        textBtn.innerText = "Modo Informativo / Reiniciar";
+        iconBtn.innerText = "🔒";
+        
+        editableBoxes.forEach(el => {
+          el.classList.add('bg-amber-50', 'border-amber-300');
+          el.innerText = "[EJERCICIO DE MORFOLOGÍA: Escribe aquí la segmentación morfológica completa y la justificación de la palabra de examen del día. Detalla cada morfema derivativo o flexivo según los criterios de la NGLE y define la estructura final de la palabra]";
+        });
+      } else {
+        textBtn.innerText = "Modo Ejercicio";
+        iconBtn.innerText = "🔓";
+        
+        editableBoxes.forEach((el, index) => {
+          el.classList.remove('bg-amber-50', 'border-amber-300');
+          el.innerHTML = initialContent[index];
+        });
+      }
+    }
+  </script>
+</body>
+</html>
