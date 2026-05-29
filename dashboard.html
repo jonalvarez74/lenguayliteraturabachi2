@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard EAU - Lengua y Literatura 2º Bachillerato</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .serif-title {
+      font-family: 'Cinzel', serif;
+    }
+    .academic-serif {
+      font-family: 'Playfair Display', serif;
+    }
+    .fade-in {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .nav-link-active {
+      border-bottom: 3px solid currentColor;
+      padding-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+
+  <!-- BARRA SUPERIOR PERSISTENTE -->
+  <nav class="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="p-2 bg-indigo-600 text-white rounded-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold serif-title">EAU Dashboard</h1>
+          <p class="text-xs text-slate-500">Lengua Castellana y Literatura II • 2º Bachillerato</p>
+        </div>
+      </div>
+
+      <!-- Buscador -->
+      <div class="flex-1 max-w-xs mx-8">
+        <input type="text" id="searchInput" placeholder="Buscar tema..." class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+      </div>
+
+      <!-- Botones de Acción -->
+      <div class="flex items-center gap-2">
+        <button id="darkModeBtn" onclick="toggleDarkMode()" class="px-3 py-2 hover:bg-slate-100 rounded-lg transition">
+          🌙
+        </button>
+        <button onclick="openProgress()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold transition">
+          📊 Mi Progreso
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CONTENEDOR PRINCIPAL -->
+  <div class="max-w-7xl mx-auto px-4 py-8">
+    <!-- SECCIÓN DE BIENVENIDA / OVERVIEW -->
+    <div id="welcomeSection" class="fade-in grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+      <div class="md:col-span-2 bg-gradient-to-br from-indigo-600 to-indigo-700 text-white p-8 rounded-xl shadow-lg">
+        <h2 class="text-3xl font-bold serif-title mb-4">Bienvenido al Sistema de Estudio EAU</h2>
+        <p class="text-indigo-100 leading-relaxed">
+          Este dashboard unificado organiza todos tus materiales de estudio para la Prueba de Acceso a la Universidad (EAU) en Lengua Castellana y Literatura. Navega entre los diferentes temas, realiza un seguimiento de tu progreso y prepárate para el examen con herramientas interactivas.
+        </p>
+        <div class="mt-6 flex gap-3">
+          <button onclick="scrollToSection('materials')" class="px-6 py-2 bg-white text-indigo-600 rounded-lg font-semibold hover:bg-indigo-50 transition">
+            Ver Materiales
+          </button>
+          <button onclick="openProgress()" class="px-6 py-2 border border-white text-white rounded-lg font-semibold hover:bg-indigo-500 transition">
+            Tracking de Progreso
+          </button>
+        </div>
+      </div>
+
+      <!-- Widget de Estadísticas -->
+      <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+        <h3 class="font-bold text-slate-900 mb-4">📈 Estadísticas Generales</h3>
+        <div class="space-y-4">
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-sm font-semibold text-slate-600">Temas Completados</span>
+              <span id="completedCount" class="text-lg font-bold text-indigo-600">0/10</span>
+            </div>
+            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+              <div id="progressBar" class="bg-indigo-600 h-full transition-all duration-500" style="width: 0%;"></div>
+            </div>
+          </div>
+          <div class="grid grid-cols-3 gap-2 text-center text-xs">
+            <div class="bg-blue-50 p-2 rounded">
+              <span class="block font-bold text-blue-700">4</span>
+              <span class="text-slate-500">Textual</span>
+            </div>
+            <div class="bg-green-50 p-2 rounded">
+              <span class="block font-bold text-green-700">3</span>
+              <span class="text-slate-500">Gramática</span>
+            </div>
+            <div class="bg-amber-50 p-2 rounded">
+              <span class="block font-bold text-amber-700">3</span>
+              <span class="text-slate-500">Literatura</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FILTROS POR CATEGORÍA -->
+    <div id="filterSection" class="mb-8 flex flex-wrap gap-3 items-center">
+      <span class="text-sm font-semibold text-slate-600">Filtrar por:</span>
+      <button onclick="filterByCategory('all')" class="filter-btn px-4 py-2 bg-slate-900 text-white rounded-lg text-sm font-semibold active" data-category="all">
+        Todos (10)
+      </button>
+      <button onclick="filterByCategory('textual')" class="filter-btn px-4 py-2 bg-white border border-blue-300 text-blue-700 rounded-lg text-sm font-semibold hover:bg-blue-50 transition" data-category="textual">
+        Textual (4)
+      </button>
+      <button onclick="filterByCategory('gramatica')" class="filter-btn px-4 py-2 bg-white border border-green-300 text-green-700 rounded-lg text-sm font-semibold hover:bg-green-50 transition" data-category="gramatica">
+        Gramática (3)
+      </button>
+      <button onclick="filterByCategory('literatura')" class="filter-btn px-4 py-2 bg-white border border-amber-300 text-amber-700 rounded-lg text-sm font-semibold hover:bg-amber-50 transition" data-category="literatura">
+        Literatura (3)
+      </button>
+    </div>
+
+    <!-- GRID DE MATERIALES -->
+    <section id="materials" class="fade-in grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+      <!-- Tema 1 -->
+      <div class="material-card textual bg-blue-50 border border-blue-200 rounded-xl p-6 shadow-sm hover:shadow-md transition cursor-pointer" onclick="openGuide(1)">
+        <div class="flex items-center justify-between mb-3">
+          <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">COMENTARIO</span>
+          <span class="text-2xl">📝</span>
+        </div>
+        <h3 class="text-lg font-bold text-blue-900 mb-2">Textos Periodísticos de Opinión</h3>
+        <p class="text-sm text-blue-700 mb-4">Análisis de comentario de texto, tema, resumen y clasificación de géneros de opinión.</p>
+        <div class="flex items-center justify-between text-xs text-slate-600">
+          <span>Tema 1</span>
+          <button class="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition" onclick="openGuide(1); event.stopPropagation();">
+            Abrir →
+          </button>
+        </div>
+      </div>
+
+      <!-- Tema 2 -->
+      <div class="material-card textual bg-blue-50 border border-blue-200 rounded-xl p-6 shadow-sm hover:shadow-md transition cursor-pointer" onclick="openGuide(2)">
+        <div class="flex items-center justify-between mb-3">
+          <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">TEXTUAL</span>
+          <span class="text-2xl">🔗</span>
+        </div>
+        <h3 class="text-lg font-bold text-blue-900 mb-2">La Coherencia Textual</h3>
+        <p class="text-sm text-blue-700 mb-4">Estructura interna, ubicación de la tesis y mecanismos de organización textual.</p>
+        <div class="flex items-center justify-between text-xs text-slate-600">
+          <span>Tema 2</span>
+          <button class="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition" onclick="openGuide(2); event.stopPropagation();">
+            Abrir →
+          </button>
+        </div>
+      </div>
+
+      <!-- Tema 3 -->
+      <div class="material-card textual bg-blue-50 border border-blue-200 rounded-xl p-6 shadow-sm hover:shadow-md transition cursor-pointer" onclick="openGuide(3)">
+        <div class="flex items-center justify-between mb-3">
+          <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">TEXTUAL</span>
+          <span class="text-2xl">⛓️</span>
+        </div>
+        <h3 class="text-lg font-bold text-blue-900 mb-2">La Cohesión Textual</h3>
+        <p class="text-sm text-blue-700 mb-4">Mecanismos de cohesión léxica, gramatical y conectores para la continuidad textual.</p>
+        <div class="flex items-center justify-between text-xs text-slate-600">
+          <span>Tema 3</span>
+          <button class="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition" onclick="openGuide(3); event.stopPropagation();">
+            Abrir →
+          </button>
+        </div>
+      </div>
+
+      <!-- Tema 4 -->
+      <div class="material-card textual bg-blue-50 border border-blue-200 rounded-xl p-6 shadow-sm hover:shadow-md transition cursor-pointer" onclick="openGuide(4)">
+        <div class="flex items-center justify-between mb-3">
+          <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">TEXTUAL</span>
+          <span class="text-2xl">✓</span>
+        </div>
+        <h3 class="text-lg font-bold text-blue-900 mb-2">La Adecuación Textual</h3>
+        <p class="text-sm text-blue-700 mb-4">Factores pragmáticos, registro, modalización y marcas de subjetividad.</p>
+        <div class="flex items-center justify-between text-xs text-slate-600">
+          <span>Tema 4</span>
+          <button class="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition" onclick="openGuide(4); event.stopPropagation();">
+            Abrir →
+          </button>
+        </div>
+      </div>
+
+      <!-- Tema 5 -->
+      <div class="material-card gramatica bg-green-50 border border-green-200 rounded-xl p-6 shadow-sm hover:shadow-md transition cursor-pointer" onclick="openGuide(5)">
+        <div class="flex items-center justify-between mb-3">
+          <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">GRAMÁTICA</span>
+          <span class="text-2xl">🔤</span>
+        </div>
+        <h3 class="text-lg font-bold text-green-900 mb-2">Morfología de la Palabra</h3>
+        <p class="text-sm text-green-700 mb-4">Segmentación, formación léxica, derivación, composición y parasíntesis según NGLE.</p>
+        <div class="flex items-center justify-between text-xs text-slate-600">
+          <span>Tema 5</span>
+          <button class="px-2 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition" onclick="openGuide(5); event.stopPropagation();">
+            Abrir →
+          </button>
+        </div>
+      </div>
+
+      <!-- Tema 6 -->
+      <div class="material-card gramatica bg-green-50 border border-green-200 rounded-xl p-6 shadow-sm hover:shadow-md transition cursor-pointer" onclick="openGuide(6)">
+        <div class="flex items-center justify-between mb-3">
+          <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">GRAMÁTICA</span>
+          <span class="text-2xl">📐</span>
+        </div>
+        <h3 class="text-lg font-bold text-green-900 mb-2">Sintaxis Funcional</h3>
+        <p class="text-sm text-green-700 mb-4">Sintagmas, subordinación, construcciones y funciones del pronombre SE.</p>
+        <div class="flex items-center justify-between text-xs text-slate-600">
+          <span>Tema 6</span>
+          <button class="px-2 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition" onclick="openGuide(6); event.stopPropagation();">
+            Abrir →
+          </button>
+        </div>
+      </div>
+
+      <!-- Tema 7 -->
+      <div class="material-card gramatica bg-green-50 border border-green-200 rounded-xl p-6 shadow-sm hover:shadow-md transition cursor-pointer" onclick="openGuide(7)">
+        <div class="flex items-center justify-between mb-3">
+          <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">GRAMÁTICA</span>
+          <span class="text-2xl">📚</span>
+        </div>
+        <h3 class="text-lg font-bold text-green-900 mb-2">Lexicología y Semántica</h3>
+        <p class="text-sm text-green-700 mb-4">Relaciones semánticas, caudal léxico, denotación, connotación y campos léxicos.</p>
+        <div class="flex items-center justify-between text-xs text-slate-600">
+          <span>Tema 7</span>
+          <button class="px-2 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition" onclick="openGuide(7); event.stopPropagation();">
+            Abrir →
+          </button>
+        </div>
+      </div>
+
+      <!-- Tema 8 -->
+      <div class="material-card literatura bg-amber-50 border border-amber-200 rounded-xl p-6 shadow-sm hover:shadow-md transition cursor-pointer" onclick="openGuide(8)">
+        <div class="flex items-center justify-between mb-3">
+          <span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-bold">LITERATURA</span>
+          <span class="text-2xl">✍️</span>
+        </div>
+        <h3 class="text-lg font-bold text-amber-900 mb-2">Antonio Machado y el 98</h3>
+        <p class="text-sm text-amber-700 mb-4">Generación del 98, intrahistoria, paisaje castellano y evolución poética de Machado.</p>
+        <div class="flex items-center justify-between text-xs text-slate-600">
+          <span>Tema 8</span>
+          <button class="px-2 py-1 bg-amber-600 text-white rounded hover:bg-amber-700 transition" onclick="openGuide(8); event.stopPropagation();">
+            Abrir →
+          </button>
+        </div>
+      </div>
+
+      <!-- Tema 9 -->
+      <div class="material-card literatura bg-amber-50 border border-amber-200 rounded-xl p-6 shadow-sm hover:shadow-md transition cursor-pointer" onclick="openGuide(9)">
+        <div class="flex items-center justify-between mb-3">
+          <span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-bold">LITERATURA</span>
+          <span class="text-2xl">🎭</span>
+        </div>
+        <h3 class="text-lg font-bold text-amber-900 mb-2">García Lorca y el 27</h3>
+        <p class="text-sm text-amber-700 mb-4">Generación del 27, vanguardia, surrealismo y análisis de "La casa de Bernarda Alba".</p>
+        <div class="flex items-center justify-between text-xs text-slate-600">
+          <span>Tema 9</span>
+          <button class="px-2 py-1 bg-amber-600 text-white rounded hover:bg-amber-700 transition" onclick="openGuide(9); event.stopPropagation();">
+            Abrir →
+          </button>
+        </div>
+      </div>
+
+      <!-- Tema 10 -->
+      <div class="material-card literatura bg-amber-50 border border-amber-200 rounded-xl p-6 shadow-sm hover:shadow-md transition cursor-pointer" onclick="openGuide(10)">
+        <div class="flex items-center justify-between mb-3">
+          <span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-bold">LITERATURA</span>
+          <span class="text-2xl">📖</span>
+        </div>
+        <h3 class="text-lg font-bold text-amber-900 mb-2">Carmen Laforet y "Nada"</h3>
+        <p class="text-sm text-amber-700 mb-4">Novela de posguerra, existencialismo, perspectiva narrativa y simbología.</p>
+        <div class="flex items-center justify-between text-xs text-slate-600">
+          <span>Tema 10</span>
+          <button class="px-2 py-1 bg-amber-600 text-white rounded hover:bg-amber-700 transition" onclick="openGuide(10); event.stopPropagation();">
+            Abrir →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN DE RECOMENDACIONES / TIPS -->
+    <section class="bg-gradient-to-r from-indigo-50 to-blue-50 border border-indigo-200 rounded-xl p-8 mb-12">
+      <h2 class="text-2xl font-bold serif-title text-slate-900 mb-6">💡 Consejos para tu Preparación</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="flex gap-4">
+          <span class="text-2xl flex-shrink-0">✅</span>
+          <div>
+            <h3 class="font-bold text-slate-900 mb-1">Estudia por bloques</h3>
+            <p class="text-sm text-slate-700">Dedica sesiones cortas (45 min) a cada tema. Usa los filtros para agrupar por categoría.</p>
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <span class="text-2xl flex-shrink-0">📋</span>
+          <div>
+            <h3 class="font-bold text-slate-900 mb-1">Ejemplifica siempre</h3>
+            <p class="text-sm text-slate-700">La regla de oro EAU: cada concepto debe venir acompañado de un ejemplo textual entrecomillado.</p>
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <span class="text-2xl flex-shrink-0">🎯</span>
+          <div>
+            <h3 class="font-bold text-slate-900 mb-1">Sigue tu progreso</h3>
+            <p class="text-sm text-slate-700">Marca los temas estudiados y repasados en tu perfil. Visualiza tu avance en el dashboard.</p>
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <span class="text-2xl flex-shrink-0">📄</span>
+          <div>
+            <h3 class="font-bold text-slate-900 mb-1">Descarga e imprime</h3>
+            <p class="text-sm text-slate-700">Cada guía se puede imprimir en A4 apaisado. Perfecto para repaso offline.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- MODAL DE PROGRESO -->
+  <div id="progressModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-xl shadow-xl p-8 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold serif-title">Tu Progreso de Estudio</h2>
+        <button onclick="closeProgress()" class="text-2xl hover:text-slate-600">×</button>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <h3 class="font-bold mb-3">Progreso General</h3>
+          <div class="w-full bg-slate-200 h-3 rounded-full overflow-hidden mb-2">
+            <div id="modalProgressBar" class="bg-indigo-600 h-full transition-all duration-500" style="width: 0%;"></div>
+          </div>
+          <p id="progressText" class="text-sm text-slate-600">0 de 10 temas completados (0%)</p>
+        </div>
+
+        <div>
+          <h3 class="font-bold mb-3">Marca tu Progreso por Tema</h3>
+          <div class="space-y-2" id="progressTrackerContainer">
+            <!-- Se generará dinámicamente -->
+          </div>
+        </div>
+
+        <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg text-sm text-blue-900">
+          <strong>💾 Tu progreso se guarda automáticamente</strong> en el navegador. Si limpias los datos del navegador, se perderá el historial.
+        </div>
+      </div>
+
+      <div class="mt-6 flex gap-3">
+        <button onclick="resetProgress()" class="px-4 py-2 border border-red-300 text-red-700 rounded-lg hover:bg-red-50 transition">
+          Reiniciar Progreso
+        </button>
+        <button onclick="closeProgress()" class="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const guideFiles = {
+      1: '1.gu_a_visual_eau_comentario_de_textos_period_sticos.html',
+      2: '2.gu_a_visual_eau_coherencia_y_estructuras.html',
+      3: '3.gu_a_visual_eau_cohesi_n_textual.html',
+      4: '4.gu_a_visual_eau_adecuaci_n_textual.html',
+      5: '5.gu_a_visual_eau_morfolog_a.html',
+      6: '6.gu_a_visual_eau_sintaxis.html',
+      7: '7.gu_a_visual_eau_lexicolog_a_y_sem_ntica.html',
+      8: '8.gu_a_visual_eau_antonio_machado_y_el_98.html',
+      9: '9.gu_a_visual_eau_lorca_y_el_27.html',
+      10: '10.gu_a_visual_eau_carmen_laforet_y_nada.html'
+    };
+
+    const themeNames = {
+      1: 'Textos Periodísticos',
+      2: 'Coherencia Textual',
+      3: 'Cohesión Textual',
+      4: 'Adecuación Textual',
+      5: 'Morfología',
+      6: 'Sintaxis',
+      7: 'Lexicología y Semántica',
+      8: 'Machado y el 98',
+      9: 'Lorca y el 27',
+      10: 'Laforet y Nada'
+    };
+
+    // Inicializar sistema de progreso
+    function initializeProgress() {
+      for (let i = 1; i <= 10; i++) {
+        const status = localStorage.getItem(`theme_${i}_status`) || 'pendiente';
+        if (status === 'completado') {
+          document.querySelectorAll('.material-card').forEach(card => {
+            if (card.textContent.includes(themeNames[i])) {
+              card.classList.add('opacity-80', 'ring-2', 'ring-green-500');
+            }
+          });
+        }
+      }
+      updateProgressMetrics();
+      renderProgressTracker();
+    }
+
+    function openGuide(themeId) {
+      window.location.href = guideFiles[themeId];
+    }
+
+    function filterByCategory(category) {
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('bg-slate-900', 'text-white');
+        btn.classList.add('bg-white', 'border', 'hover:bg-slate-50');
+        btn.textContent = btn.getAttribute('data-category').charAt(0).toUpperCase() + btn.getAttribute('data-category').slice(1);
+      });
+
+      event.target.classList.add('bg-slate-900', 'text-white');
+      event.target.classList.remove('bg-white', 'border', 'hover:bg-slate-50');
+
+      document.querySelectorAll('.material-card').forEach(card => {
+        if (category === 'all' || card.classList.contains(category)) {
+          card.style.display = 'block';
+          card.classList.add('fade-in');
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    function scrollToSection(sectionId) {
+      document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function openProgress() {
+      document.getElementById('progressModal').classList.remove('hidden');
+    }
+
+    function closeProgress() {
+      document.getElementById('progressModal').classList.add('hidden');
+    }
+
+    function updateProgressMetrics() {
+      const completed = Object.keys(localStorage).filter(key => 
+        key.startsWith('theme_') && localStorage.getItem(key) === 'completado'
+      ).length;
+
+      const percentage = (completed / 10) * 100;
+      document.getElementById('progressBar').style.width = percentage + '%';
+      document.getElementById('completedCount').textContent = `${completed}/10`;
+      document.getElementById('modalProgressBar').style.width = percentage + '%';
+      document.getElementById('progressText').textContent = `${completed} de 10 temas completados (${Math.round(percentage)}%)`;
+    }
+
+    function renderProgressTracker() {
+      const container = document.getElementById('progressTrackerContainer');
+      container.innerHTML = '';
+
+      for (let i = 1; i <= 10; i++) {
+        const status = localStorage.getItem(`theme_${i}_status`) || 'pendiente';
+        const div = document.createElement('div');
+        div.className = 'flex items-center gap-3 p-3 bg-slate-50 rounded-lg';
+        div.innerHTML = `
+          <span class="w-8 h-8 flex items-center justify-center rounded-full text-white font-bold ${
+            status === 'completado' ? 'bg-green-500' : 'bg-slate-400'
+          }">${i}</span>
+          <span class="flex-1 font-medium text-slate-900">${themeNames[i]}</span>
+          <select onchange="updateThemeStatus(${i}, this.value)" class="px-3 py-1 border border-slate-300 rounded text-sm">
+            <option value="pendiente" ${status === 'pendiente' ? 'selected' : ''}>Pendiente</option>
+            <option value="estudiado" ${status === 'estudiado' ? 'selected' : ''}>Estudiado</option>
+            <option value="completado" ${status === 'completado' ? 'selected' : ''}>Completado ✓</option>
+          </select>
+        `;
+        container.appendChild(div);
+      }
+    }
+
+    function updateThemeStatus(themeId, status) {
+      localStorage.setItem(`theme_${themeId}_status`, status);
+      updateProgressMetrics();
+      renderProgressTracker();
+    }
+
+    function resetProgress() {
+      if (confirm('¿Estás seguro de que deseas reiniciar todo tu progreso?')) {
+        for (let i = 1; i <= 10; i++) {
+          localStorage.removeItem(`theme_${i}_status`);
+        }
+        updateProgressMetrics();
+        renderProgressTracker();
+      }
+    }
+
+    function toggleDarkMode() {
+      document.documentElement.classList.toggle('dark');
+      localStorage.setItem('darkMode', document.documentElement.classList.contains('dark'));
+    }
+
+    // Búsqueda
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase();
+      document.querySelectorAll('.material-card').forEach(card => {
+        if (card.textContent.toLowerCase().includes(query)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+
+    // Inicializar
+    window.addEventListener('DOMContentLoaded', initializeProgress);
+  </script>
+</body>
+</html>
