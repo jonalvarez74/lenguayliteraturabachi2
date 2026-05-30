@@ -10,6 +10,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <!-- Estilos compartidos de navegación -->
+  <link rel="stylesheet" href="styles/navbar.css">
   
   <style>
     body {
@@ -55,26 +57,62 @@
     }
   </style>
 </head>
-<body class="bg-slate-100 text-slate-800 transition-colors duration-300 min-h-screen py-6 px-4 flex flex-col items-center">
+<body class="bg-slate-100 text-slate-800 transition-colors duration-300 min-h-screen flex flex-col">
 
-  <!-- MENÚ DE NAVEGACIÓN SUPERIOR (NO IMPRIMIBLE) -->
-  <nav class="no-print w-full bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-lg mb-4">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.747m0-13h7.5m-7.5 13h7.5m0 0V5m0 13H3m0 0V5m0 13a1.5 1.5 0 010-3h1.5a1.5 1.5 0 010 3H3z" />
+  <!-- BARRA DE NAVEGACIÓN UNIFICADA -->
+  <nav class="eau-navbar">
+    <div class="eau-navbar-container">
+      <!-- Logo/Marca -->
+      <a href="index.html.html" class="eau-navbar-brand">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
         </svg>
-        <span class="font-bold text-lg">Lengua y Literatura II</span>
-      </div>
-      <div class="flex items-center gap-4">
-        <a href="index.html.html" class="px-4 py-2 rounded-lg bg-white text-indigo-600 font-semibold hover:bg-indigo-50 transition flex items-center gap-2 group">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform group-hover:-translate-y-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-3m0 0l7-4 7 4M5 9v10a1 1 0 001 1h12a1 1 0 001-1V9M9 12l3-3m0 0l3 3m-3-3v6" />
-          </svg>
-          <span>Volver a Portada</span>
-        </a>
-        <button onclick="window.print()" class="px-4 py-2 rounded-lg bg-white/20 text-white font-semibold hover:bg-white/30 transition flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <span>Lengua y Literatura II</span>
+      </a>
+
+      <!-- Menú principal -->
+      <ul class="eau-navbar-menu">
+        <li>
+          <a href="index.html.html" class="eau-navbar-link">
+            <span>📋</span> Portada
+          </a>
+        </li>
+        <li>
+          <a href="1.gu_a_visual_eau_comentario_de_textos_period_sticos.html" class="eau-navbar-link active">
+            <span>📝</span> Textos Periodísticos
+          </a>
+        </li>
+        <li>
+          <a href="2.gu_a_visual_eau_coherencia_y_estructuras.html" class="eau-navbar-link">
+            <span>🔗</span> Coherencia
+          </a>
+        </li>
+        <li>
+          <a href="3.gu_a_visual_eau_cohesi_n_textual.html" class="eau-navbar-link">
+            <span>⛓️</span> Cohesión
+          </a>
+        </li>
+        <li>
+          <a href="4.gu_a_visual_eau_adecuaci_n_textual.html" class="eau-navbar-link">
+            <span>✨</span> Adecuación
+          </a>
+        </li>
+        <li>
+          <a href="5.gu_a_visual_eau_morfolog_a.html" class="eau-navbar-link">
+            <span>🔤</span> Morfología
+          </a>
+        </li>
+        <li>
+          <a href="6.gu_a_visual_eau_sintaxis.html" class="eau-navbar-link">
+            <span>📐</span> Sintaxis
+          </a>
+        </li>
+      </ul>
+
+      <!-- Botones de acción -->
+      <div class="eau-navbar-menu">
+        <button onclick="window.print()" class="eau-navbar-button eau-navbar-button-secondary">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2z" />
           </svg>
           <span>Imprimir</span>
@@ -83,238 +121,241 @@
     </div>
   </nav>
 
-  <!-- BARRA DE HERRAMIENTAS SUPERIOR (NO IMPRIMIBLE) -->
-  <div class="no-print w-full max-w-6xl mb-4 bg-white/80 backdrop-blur-md border border-slate-200/80 p-4 rounded-xl shadow-sm flex flex-wrap gap-4 items-center justify-between">
-    <div class="flex items-center gap-3">
-      <div class="p-2 bg-indigo-50 rounded-lg text-indigo-600">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.747m0-13h7.5m-7.5 13h7.5m0 0V5m0 13H3m0 0V5m0 13a1.5 1.5 0 010-3h1.5a1.5 1.5 0 010 3H3z" />
-        </svg>
+  <!-- CONTENIDO PRINCIPAL -->
+  <div class="flex-1 py-6 px-4">
+    <!-- BARRA DE HERRAMIENTAS ADICIONAL (NO IMPRIMIBLE) -->
+    <div class="no-print w-full max-w-6xl mx-auto mb-4 bg-white/80 backdrop-blur-md border border-slate-200/80 p-4 rounded-xl shadow-sm flex flex-wrap gap-4 items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="p-2 bg-indigo-50 rounded-lg text-indigo-600">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold text-slate-900 leading-tight">Organizador Visual EAU • Lengua Castellana</h1>
+          <p class="text-xs text-slate-500">Esquema metodológico para el análisis de Textos Periodísticos de Opinión</p>
+        </div>
       </div>
-      <div>
-        <h1 class="text-lg font-bold text-slate-900 leading-tight">Organizador Visual EAU • Lengua Castellana</h1>
-        <p class="text-xs text-slate-500">Esquema metodológico para el análisis de Textos Periodísticos de Opinión</p>
-      </div>
-    </div>
-    
-    <div class="flex items-center gap-3">
-      <!-- Modo Ficha Activa -->
-      <button id="toggleModeBtn" onclick="toggleEditMode()" class="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg font-medium text-sm hover:bg-slate-50 flex items-center gap-2 transition">
-        <span id="modeIcon">🔓</span>
-        <span id="modeText">Modo Rellenar Ficha</span>
-      </button>
-
-      <!-- Botón Imprimir -->
-      <button onclick="window.print()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold text-sm flex items-center gap-2 transition shadow-sm">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2z" />
-        </svg>
-        Descargar en PDF / Imprimir
-      </button>
-    </div>
-  </div>
-
-  <!-- CONTENEDOR DINA4 APAISADO -->
-  <div id="canvas" class="print-fullscreen a4-landscape-page bg-white text-slate-800 shadow-2xl rounded-2xl border border-slate-300 overflow-hidden flex flex-col p-8 transition-transform duration-300">
-    
-    <!-- ENCABEZADO DE LA HOJA -->
-    <header class="border-b-2 border-indigo-900/10 pb-4 mb-4 flex justify-between items-end">
-      <div>
-        <span class="text-xs font-bold uppercase tracking-widest text-indigo-700 bg-indigo-50 px-2 py-1 rounded">EAU • Marco Vasco Gob. Vasco (Dto. 76/2023)</span>
-        <h2 class="serif-title text-2xl font-bold text-slate-900 mt-1">El Texto Periodístico de Opinión</h2>
-      </div>
-      <div class="text-right">
-        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Metodología de Comentario</p>
-        <p class="academic-serif italic text-sm text-indigo-900">Síntesis, Clasificación y Pragmática</p>
-      </div>
-    </header>
-
-    <!-- CUADRÍCULA DE COLUMNAS (3 Bloques de Contenido) -->
-    <main class="grid grid-cols-3 gap-6 flex-grow content-start">
       
-      <!-- COLUMNA 1: SÍNTESIS OBJETIVA -->
-      <section class="flex flex-col gap-4 border-r border-dashed border-slate-200 pr-3">
-        <!-- Tarjeta: El Tema -->
-        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 hover:border-indigo-200 transition">
-          <div class="flex items-center gap-2 mb-2">
-            <span class="w-6 h-6 flex items-center justify-center bg-indigo-600 text-white rounded-full text-xs font-bold">1</span>
-            <h3 class="text-sm font-bold uppercase text-slate-900 tracking-wider">El Tema</h3>
-          </div>
-          <div class="text-xs text-slate-600 leading-relaxed space-y-2">
-            <p><strong>Definición:</strong> Idea central que sintetiza la intención del autor.</p>
-            <div class="p-2 bg-white rounded border border-slate-100 italic" contenteditable="true">
-              <strong>Fórmula ideal:</strong> Grupo nominal cuyo núcleo es un sustantivo abstracto (máx. 10 palabras).
-            </div>
-            <div class="grid grid-cols-2 gap-1 text-[10px] mt-1 pt-1 border-t border-slate-100">
-              <span class="text-green-700">✓ "Crítica a la apatía..."</span>
-              <span class="text-red-600">✗ "El tema es la apatía"</span>
-            </div>
-          </div>
-        </div>
+      <div class="flex items-center gap-3">
+        <!-- Modo Ficha Activa -->
+        <button id="toggleModeBtn" onclick="toggleEditMode()" class="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg font-medium text-sm hover:bg-slate-50 flex items-center gap-2 transition">
+          <span id="modeIcon">🔓</span>
+          <span id="modeText">Modo Rellenar Ficha</span>
+        </button>
 
-        <!-- Tarjeta: El Resumen -->
-        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 hover:border-indigo-200 transition">
-          <div class="flex items-center gap-2 mb-2">
-            <span class="w-6 h-6 flex items-center justify-center bg-indigo-600 text-white rounded-full text-xs font-bold">2</span>
-            <h3 class="text-sm font-bold uppercase text-slate-900 tracking-wider">El Resumen</h3>
-          </div>
-          <div class="text-xs text-slate-600 leading-relaxed space-y-2">
-            <ul class="list-disc pl-4 space-y-1">
-              <li><strong>Extensión:</strong> ~25% del texto (8-10 líneas).</li>
-              <li><strong>Estructura:</strong> Un único párrafo sin subdivisiones.</li>
-              <li><strong>Estilo:</strong> Objetivo, 3.ª persona / impersonal.</li>
-              <li><strong>Contenido:</strong> Tesis + argumentos principales.</li>
-            </ul>
-            <p class="text-[10px] bg-amber-50 text-amber-800 p-1.5 rounded border border-amber-100">
-              <strong>⚠️ No admitido:</strong> Ejemplos, anécdotas o frases textuales del autor.
-            </p>
-          </div>
-        </div>
-      </section>
+        <!-- Botón Imprimir -->
+        <button onclick="window.print()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold text-sm flex items-center gap-2 transition shadow-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2z" />
+          </svg>
+          Descargar en PDF / Imprimir
+        </button>
+      </div>
+    </div>
 
-      <!-- COLUMNA 2: CLASIFICACIÓN DE TEXTO -->
-      <section class="flex flex-col gap-4 border-r border-dashed border-slate-200 px-1">
-        <!-- Ámbito y Géneros -->
-        <div class="bg-indigo-50/40 p-4 rounded-xl border border-indigo-100 hover:border-indigo-200 transition flex-grow flex flex-col justify-between">
-          <div>
-            <div class="flex items-center gap-2 mb-3">
-              <span class="w-6 h-6 flex items-center justify-center bg-indigo-800 text-white rounded-full text-xs font-bold">3</span>
-              <h3 class="text-sm font-bold uppercase text-slate-900 tracking-wider">Clasificación</h3>
+    <!-- CONTENEDOR DINA4 APAISADO -->
+    <div id="canvas" class="print-fullscreen a4-landscape-page bg-white text-slate-800 shadow-2xl rounded-2xl border border-slate-300 overflow-hidden flex flex-col p-8 transition-transform duration-300 mx-auto">
+      
+      <!-- ENCABEZADO DE LA HOJA -->
+      <header class="border-b-2 border-indigo-900/10 pb-4 mb-4 flex justify-between items-end">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-widest text-indigo-700 bg-indigo-50 px-2 py-1 rounded">EAU • Marco Vasco Gob. Vasco (Dto. 76/2023)</span>
+          <h2 class="serif-title text-2xl font-bold text-slate-900 mt-1">El Texto Periodístico de Opinión</h2>
+        </div>
+        <div class="text-right">
+          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Metodología de Comentario</p>
+          <p class="academic-serif italic text-sm text-indigo-900">Síntesis, Clasificación y Pragmática</p>
+        </div>
+      </header>
+
+      <!-- CUADRÍCULA DE COLUMNAS (3 Bloques de Contenido) -->
+      <main class="grid grid-cols-3 gap-6 flex-grow content-start">
+        
+        <!-- COLUMNA 1: SÍNTESIS OBJETIVA -->
+        <section class="flex flex-col gap-4 border-r border-dashed border-slate-200 pr-3">
+          <!-- Tarjeta: El Tema -->
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 hover:border-indigo-200 transition">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-6 h-6 flex items-center justify-center bg-indigo-600 text-white rounded-full text-xs font-bold">1</span>
+              <h3 class="text-sm font-bold uppercase text-slate-900 tracking-wider">El Tema</h3>
             </div>
-            <div class="space-y-3">
-              <!-- Ámbito -->
-              <div class="bg-white p-2.5 rounded border border-slate-200/60">
-                <p class="text-[10px] font-bold uppercase tracking-wider text-indigo-900 mb-1">Ámbito de Uso</p>
-                <p class="text-xs text-slate-700"><strong>Periodístico:</strong> Difusión masiva, debate público y actualidad social.</p>
+            <div class="text-xs text-slate-600 leading-relaxed space-y-2">
+              <p><strong>Definición:</strong> Idea central que sintetiza la intención del autor.</p>
+              <div class="p-2 bg-white rounded border border-slate-100 italic" contenteditable="true">
+                <strong>Fórmula ideal:</strong> Grupo nominal cuyo núcleo es un sustantivo abstracto (máx. 10 palabras).
               </div>
-              
-              <!-- Género -->
-              <div class="bg-white p-2.5 rounded border border-slate-200/60">
-                <p class="text-[10px] font-bold uppercase tracking-wider text-indigo-900 mb-1">Géneros de Opinión</p>
-                <div class="grid grid-cols-1 gap-2 text-xs">
-                  <div><strong class="text-indigo-800">Editorial:</strong> Línea ideológica, no firmado, institucional.</div>
-                  <div><strong class="text-indigo-800">Columna:</strong> Firma fija, libertad estilística, tono literario.</div>
-                  <div><strong class="text-indigo-800">Artículo de opinión:</strong> Firma colaboradora de renombre/experto.</div>
+              <div class="grid grid-cols-2 gap-1 text-[10px] mt-1 pt-1 border-t border-slate-100">
+                <span class="text-green-700">✓ "Crítica a la apatía..."</span>
+                <span class="text-red-600">✗ "El tema es la apatía"</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tarjeta: El Resumen -->
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 hover:border-indigo-200 transition">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-6 h-6 flex items-center justify-center bg-indigo-600 text-white rounded-full text-xs font-bold">2</span>
+              <h3 class="text-sm font-bold uppercase text-slate-900 tracking-wider">El Resumen</h3>
+            </div>
+            <div class="text-xs text-slate-600 leading-relaxed space-y-2">
+              <ul class="list-disc pl-4 space-y-1">
+                <li><strong>Extensión:</strong> ~25% del texto (8-10 líneas).</li>
+                <li><strong>Estructura:</strong> Un único párrafo sin subdivisiones.</li>
+                <li><strong>Estilo:</strong> Objetivo, 3.ª persona / impersonal.</li>
+                <li><strong>Contenido:</strong> Tesis + argumentos principales.</li>
+              </ul>
+              <p class="text-[10px] bg-amber-50 text-amber-800 p-1.5 rounded border border-amber-100">
+                <strong>⚠️ No admitido:</strong> Ejemplos, anécdotas o frases textuales del autor.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- COLUMNA 2: CLASIFICACIÓN DE TEXTO -->
+        <section class="flex flex-col gap-4 border-r border-dashed border-slate-200 px-1">
+          <!-- Ámbito y Géneros -->
+          <div class="bg-indigo-50/40 p-4 rounded-xl border border-indigo-100 hover:border-indigo-200 transition flex-grow flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="w-6 h-6 flex items-center justify-center bg-indigo-800 text-white rounded-full text-xs font-bold">3</span>
+                <h3 class="text-sm font-bold uppercase text-slate-900 tracking-wider">Clasificación</h3>
+              </div>
+              <div class="space-y-3">
+                <!-- Ámbito -->
+                <div class="bg-white p-2.5 rounded border border-slate-200/60">
+                  <p class="text-[10px] font-bold uppercase tracking-wider text-indigo-900 mb-1">Ámbito de Uso</p>
+                  <p class="text-xs text-slate-700"><strong>Periodístico:</strong> Difusión masiva, debate público y actualidad social.</p>
+                </div>
+                
+                <!-- Género -->
+                <div class="bg-white p-2.5 rounded border border-slate-200/60">
+                  <p class="text-[10px] font-bold uppercase tracking-wider text-indigo-900 mb-1">Géneros de Opinión</p>
+                  <div class="grid grid-cols-1 gap-2 text-xs">
+                    <div><strong class="text-indigo-800">Editorial:</strong> Línea ideológica, no firmado, institucional.</div>
+                    <div><strong class="text-indigo-800">Columna:</strong> Firma fija, libertad estilística, tono literario.</div>
+                    <div><strong class="text-indigo-800">Artículo de opinión:</strong> Firma colaboradora de renombre/experto.</div>
+                  </div>
+                </div>
+
+                <!-- Secuencias -->
+                <div class="bg-white p-2.5 rounded border border-slate-200/60">
+                  <p class="text-[10px] font-bold uppercase tracking-wider text-indigo-900 mb-1">Tipología Textual</p>
+                  <p class="text-xs text-slate-700"><strong>Expositivo-Argumentativo:</strong> Presentación de hechos (exposición) para justificar la opinión (tesis y argumentos).</p>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
 
-              <!-- Secuencias -->
-              <div class="bg-white p-2.5 rounded border border-slate-200/60">
-                <p class="text-[10px] font-bold uppercase tracking-wider text-indigo-900 mb-1">Tipología Textual</p>
-                <p class="text-xs text-slate-700"><strong>Expositivo-Argumentativo:</strong> Presentación de hechos (exposición) para justificar la opinión (tesis y argumentos).</p>
+        <!-- COLUMNA 3: HERRAMIENTAS LINGÜÍSTICAS Y PRAGMÁTICA -->
+        <section class="flex flex-col gap-4 pl-3">
+          <!-- Funciones del Lenguaje -->
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 hover:border-indigo-200 transition">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-6 h-6 flex items-center justify-center bg-indigo-600 text-white rounded-full text-xs font-bold">4</span>
+              <h3 class="text-sm font-bold uppercase text-slate-900 tracking-wider">Funciones Lingüísticas</h3>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-[11px] text-slate-600">
+              <div class="bg-white p-1.5 rounded border border-slate-100">
+                <span class="font-bold text-slate-800">Expresiva:</span> Subjetividad, valoraciones personales.
+              </div>
+              <div class="bg-white p-1.5 rounded border border-slate-100">
+                <span class="font-bold text-slate-800">Apelativa:</span> Pretende captar o mover la conciencia del lector.
+              </div>
+              <div class="bg-white p-1.5 rounded border border-slate-100">
+                <span class="font-bold text-slate-800">Referencial:</span> Hechos, datos empíricos de apoyo.
+              </div>
+              <div class="bg-white p-1.5 rounded border border-slate-100">
+                <span class="font-bold text-slate-800">Poética:</span> Metáfora, ironía, estilo literario.
               </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      <!-- COLUMNA 3: HERRAMIENTAS LINGÜÍSTICAS Y PRAGMÁTICA -->
-      <section class="flex flex-col gap-4 pl-3">
-        <!-- Funciones del Lenguaje -->
-        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 hover:border-indigo-200 transition">
-          <div class="flex items-center gap-2 mb-2">
-            <span class="w-6 h-6 flex items-center justify-center bg-indigo-600 text-white rounded-full text-xs font-bold">4</span>
-            <h3 class="text-sm font-bold uppercase text-slate-900 tracking-wider">Funciones Lingüísticas</h3>
+          <!-- Marcas de Modalización -->
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 hover:border-indigo-200 transition">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-6 h-6 flex items-center justify-center bg-indigo-600 text-white rounded-full text-xs font-bold">5</span>
+              <h3 class="text-sm font-bold uppercase text-slate-900 tracking-wider">Modalización (Subjetividad)</h3>
+            </div>
+            <ul class="text-[11px] text-slate-600 space-y-1 pl-1">
+              <li>🗣️ <strong>Deixis personal:</strong> Verbos/pronombres (1ª p. sg, plural inclusivo).</li>
+              <li>💎 <strong>Léxico valorativo:</strong> Sustantivos, adjetivos, verbos de opinión.</li>
+              <li>❓ <strong>Modalidad oracional:</strong> Interrogación retórica, exclamación.</li>
+              <li>✍️ <strong>Recursos tipográficos:</strong> Comillas, guiones para aclaraciones.</li>
+            </ul>
           </div>
-          <div class="grid grid-cols-2 gap-2 text-[11px] text-slate-600">
-            <div class="bg-white p-1.5 rounded border border-slate-100">
-              <span class="font-bold text-slate-800">Expresiva:</span> Subjetividad, valoraciones personales.
-            </div>
-            <div class="bg-white p-1.5 rounded border border-slate-100">
-              <span class="font-bold text-slate-800">Apelativa:</span> Pretende captar o mover la conciencia del lector.
-            </div>
-            <div class="bg-white p-1.5 rounded border border-slate-100">
-              <span class="font-bold text-slate-800">Referencial:</span> Hechos, datos empíricos de apoyo.
-            </div>
-            <div class="bg-white p-1.5 rounded border border-slate-100">
-              <span class="font-bold text-slate-800">Poética:</span> Metáfora, ironía, estilo literario.
-            </div>
+        </section>
+
+      </main>
+
+      <!-- PIE DE HOJA: LA REGLA DE ORO DE LA EAU (UPV/EHU) -->
+      <footer class="mt-4 bg-indigo-900 text-white p-4 rounded-xl flex items-center justify-between shadow-inner">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">⚡</span>
+          <div>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-indigo-200">Regla de Oro Inexcusable de la EAU (UPV/EHU)</h4>
+            <p class="text-[11px] text-indigo-50 leading-tight">Cada propiedad, registro o rasgo de modalización analizado debe ser ejemplificado citando textualmente entre comillas.</p>
           </div>
         </div>
+        <div class="text-[10px] font-bold text-indigo-200 bg-indigo-950 px-3 py-1.5 rounded-lg border border-indigo-800">
+          NO EJEMPLIFICAR = 0 PUNTOS
+        </div>
+      </footer>
 
-        <!-- Marcas de Modalización -->
-        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 hover:border-indigo-200 transition">
-          <div class="flex items-center gap-2 mb-2">
-            <span class="w-6 h-6 flex items-center justify-center bg-indigo-600 text-white rounded-full text-xs font-bold">5</span>
-            <h3 class="text-sm font-bold uppercase text-slate-900 tracking-wider">Modalización (Subjetividad)</h3>
-          </div>
-          <ul class="text-[11px] text-slate-600 space-y-1 pl-1">
-            <li>🗣️ <strong>Deixis personal:</strong> Verbos/pronombres (1ª p. sg, plural inclusivo).</li>
-            <li>💎 <strong>Léxico valorativo:</strong> Sustantivos, adjetivos, verbos de opinión.</li>
-            <li>❓ <strong>Modalidad oracional:</strong> Interrogación retórica, exclamación.</li>
-            <li>✍️ <strong>Recursos tipográficos:</strong> Comillas, guiones para aclaraciones.</li>
-          </ul>
-        </div>
-      </section>
-
-    </main>
-
-    <!-- PIE DE HOJA: LA REGLA DE ORO DE LA EAU (UPV/EHU) -->
-    <footer class="mt-4 bg-indigo-900 text-white p-4 rounded-xl flex items-center justify-between shadow-inner">
-      <div class="flex items-center gap-3">
-        <span class="text-2xl">⚡</span>
-        <div>
-          <h4 class="text-xs font-bold uppercase tracking-wider text-indigo-200">Regla de Oro Inexcusable de la EAU (UPV/EHU)</h4>
-          <p class="text-[11px] text-indigo-50 leading-tight">Cada propiedad, registro o rasgo de modalización analizado debe ser ejemplificado citando textualmente entre comillas.</p>
-        </div>
-      </div>
-      <div class="text-[10px] font-bold text-indigo-200 bg-indigo-950 px-3 py-1.5 rounded-lg border border-indigo-800">
-        NO EJEMPLIFICAR = 0 PUNTOS
-      </div>
-    </footer>
-
-  </div>
-
-  <!-- SECCIÓN DE NOTAS Y HERRAMIENTAS ADICIONALES (NO IMPRIMIBLE) -->
-  <div class="no-print w-full max-w-6xl mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-    <!-- Lista de Conectores para Síntesis -->
-    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-      <h3 class="text-sm font-bold uppercase text-indigo-900 mb-3 tracking-wide flex items-center gap-2">
-        <span>🔗</span> Conectores recomendados para el Resumen
-      </h3>
-      <div class="grid grid-cols-2 gap-2 text-xs">
-        <div class="bg-slate-50 p-2 rounded">
-          <p class="font-bold text-slate-700">Para iniciar:</p>
-          <p class="text-slate-500 italic">"El texto parte de..."</p>
-        </div>
-        <div class="bg-slate-50 p-2 rounded">
-          <p class="font-bold text-slate-700">Para añadir argumentos:</p>
-          <p class="text-slate-500 italic">"Asimismo, argumenta que..."</p>
-        </div>
-        <div class="bg-slate-50 p-2 rounded">
-          <p class="font-bold text-slate-700">Para contrastar:</p>
-          <p class="text-slate-500 italic">"No obstante, objeta que..."</p>
-        </div>
-        <div class="bg-slate-50 p-2 rounded">
-          <p class="font-bold text-slate-700">Para concluir:</p>
-          <p class="text-slate-500 italic">"En conclusión, defiende..."</p>
-        </div>
-      </div>
     </div>
 
-    <!-- Criterio EAU Checklist -->
-    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-      <h3 class="text-sm font-bold uppercase text-indigo-900 mb-3 tracking-wide flex items-center gap-2">
-        <span>🎯</span> Checklist de Autoevaluación de Examen
-      </h3>
-      <ul class="text-xs text-slate-600 space-y-2">
-        <li class="flex items-start gap-2">
-          <input type="checkbox" class="mt-0.5 rounded text-indigo-600 focus:ring-indigo-500">
-          <span>¿El tema contiene un sustantivo abstracto y ocupa menos de 10 palabras?</span>
-        </li>
-        <li class="flex items-start gap-2">
-          <input type="checkbox" class="mt-0.5 rounded text-indigo-600 focus:ring-indigo-500">
-          <span>¿El resumen está redactado en un único párrafo sin utilizar la primera persona?</span>
-        </li>
-        <li class="flex items-start gap-2">
-          <input type="checkbox" class="mt-0.5 rounded text-indigo-600 focus:ring-indigo-500">
-          <span>¿He clasificado correctamente el género explicando las diferencias estructurales?</span>
-        </li>
-        <li class="flex items-start gap-2">
-          <input type="checkbox" class="mt-0.5 rounded text-indigo-600 focus:ring-indigo-500">
-          <span>¿Todas las marcas lingüísticas identificadas van acompañadas de un ejemplo entrecomillado?</span>
-        </li>
-      </ul>
+    <!-- SECCIÓN DE NOTAS Y HERRAMIENTAS ADICIONALES (NO IMPRIMIBLE) -->
+    <div class="no-print w-full max-w-6xl mx-auto mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Lista de Conectores para Síntesis -->
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+        <h3 class="text-sm font-bold uppercase text-indigo-900 mb-3 tracking-wide flex items-center gap-2">
+          <span>🔗</span> Conectores recomendados para el Resumen
+        </h3>
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div class="bg-slate-50 p-2 rounded">
+            <p class="font-bold text-slate-700">Para iniciar:</p>
+            <p class="text-slate-500 italic">"El texto parte de..."</p>
+          </div>
+          <div class="bg-slate-50 p-2 rounded">
+            <p class="font-bold text-slate-700">Para añadir argumentos:</p>
+            <p class="text-slate-500 italic">"Asimismo, argumenta que..."</p>
+          </div>
+          <div class="bg-slate-50 p-2 rounded">
+            <p class="font-bold text-slate-700">Para contrastar:</p>
+            <p class="text-slate-500 italic">"No obstante, objeta que..."</p>
+          </div>
+          <div class="bg-slate-50 p-2 rounded">
+            <p class="font-bold text-slate-700">Para concluir:</p>
+            <p class="text-slate-500 italic">"En conclusión, defiende..."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Criterio EAU Checklist -->
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+        <h3 class="text-sm font-bold uppercase text-indigo-900 mb-3 tracking-wide flex items-center gap-2">
+          <span>🎯</span> Checklist de Autoevaluación de Examen
+        </h3>
+        <ul class="text-xs text-slate-600 space-y-2">
+          <li class="flex items-start gap-2">
+            <input type="checkbox" class="mt-0.5 rounded text-indigo-600 focus:ring-indigo-500">
+            <span>¿El tema contiene un sustantivo abstracto y ocupa menos de 10 palabras?</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <input type="checkbox" class="mt-0.5 rounded text-indigo-600 focus:ring-indigo-500">
+            <span>¿El resumen está redactado en un único párrafo sin utilizar la primera persona?</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <input type="checkbox" class="mt-0.5 rounded text-indigo-600 focus:ring-indigo-500">
+            <span>¿He clasificado correctamente el género explicando las diferencias estructurales?</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <input type="checkbox" class="mt-0.5 rounded text-indigo-600 focus:ring-indigo-500">
+            <span>¿Todas las marcas lingüísticas identificadas van acompañadas de un ejemplo entrecomillado?</span>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 
