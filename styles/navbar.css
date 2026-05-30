@@ -1,0 +1,130 @@
+/* Estilos compartidos para la barra de navegación */
+.eau-navbar {
+  background: linear-gradient(to right, #4f46e5 0%, #6366f1 100%);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.eau-navbar-container {
+  max-width: 7xl;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 3.5rem;
+}
+
+.eau-navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.125rem;
+}
+
+.eau-navbar-brand svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.eau-navbar-menu {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.eau-navbar-link {
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.eau-navbar-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.eau-navbar-link.active {
+  background-color: white;
+  color: #4f46e5;
+  font-weight: 600;
+}
+
+.eau-navbar-button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.eau-navbar-button-primary {
+  background-color: white;
+  color: #4f46e5;
+}
+
+.eau-navbar-button-primary:hover {
+  background-color: #f0f4ff;
+}
+
+.eau-navbar-button-secondary {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.eau-navbar-button-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.eau-navbar-button svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .eau-navbar-container {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 0.75rem 1rem;
+  }
+
+  .eau-navbar-menu {
+    width: 100%;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .eau-navbar-link {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* Ocultar en impresión */
+@media print {
+  .eau-navbar {
+    display: none !important;
+  }
+}
